@@ -632,18 +632,53 @@
 </div>
 
 <script>
+  // ── 定数 ──────────────────────────────────────
+  const TEXT_FIELDS = ['keyword','exact','exclude','orA','orB','fromUser','toUser','mention','since','until','minFaves','minRetweets'];
+  const filters = { images: false, videos: false, links: false };
+
+  // ── URL ハッシュに状態を保存・復元 ──────────────
+  function saveState() {
+    const p = new URLSearchParams();
+    TEXT_FIELDS.forEach(id => {
+      const v = document.getElementById(id).value.trim();
+      if (v) p.set(id, v);
+    });
+    Object.keys(filters).forEach(k => {
+      if (filters[k]) p.set('f_' + k, '1');
+    });
+    const str = p.toString();
+    history.replaceState(null, '', str ? '#' + str : location.pathname + location.search);
+  }
+
+  function restoreState() {
+    const hash = location.hash.slice(1);
+    if (!hash) return;
+    const p = new URLSearchParams(hash);
+    TEXT_FIELDS.forEach(id => {
+      const v = p.get(id);
+      if (v) document.getElementById(id).value = v;
+    });
+    Object.keys(filters).forEach(k => {
+      if (p.get('f_' + k) === '1') {
+        filters[k] = true;
+        document.getElementById('btn-' + k).classList.add('active');
+      }
+    });
+  }
+
+  // ── ガイド ────────────────────────────────────
   function toggleGuide() {
     document.getElementById('guide').classList.toggle('open');
   }
 
-  const filters = { images: false, videos: false, links: false };
-
+  // ── フィルタートグル ──────────────────────────
   function toggleFilter(name) {
     filters[name] = !filters[name];
     document.getElementById('btn-' + name).classList.toggle('active', filters[name]);
     updatePreview();
   }
 
+  // ── クエリ生成 ────────────────────────────────
   function val(id) {
     return document.getElementById(id).value.trim();
   }
@@ -693,6 +728,7 @@
     return parts.join(' ');
   }
 
+  // ── プレビュー更新（状態保存も兼ねる） ──────────
   function updatePreview() {
     const q = buildQuery();
     const el = document.getElementById('queryPreview');
@@ -706,15 +742,20 @@
       el.classList.add('empty');
       btn.disabled = true;
     }
+    saveState();
   }
 
+  // ── 検索実行 ──────────────────────────────────
   function doSearch() {
     const q = buildQuery();
     if (!q) return;
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
-    window.open(url, '_blank');
+    // 新タブで開こうとし、ブロックされた場合は同タブで開く
+    const w = window.open(url, '_blank', 'noopener');
+    if (!w) location.href = url;
   }
 
+  // ── コピー ────────────────────────────────────
   function copyQuery() {
     const q = buildQuery();
     if (!q) return;
@@ -732,8 +773,9 @@
     });
   }
 
+  // ── リセット ──────────────────────────────────
   function clearAll() {
-    ['keyword','exact','exclude','orA','orB','fromUser','toUser','mention','since','until','minFaves','minRetweets'].forEach(id => {
+    TEXT_FIELDS.forEach(id => {
       document.getElementById(id).value = '';
     });
     Object.keys(filters).forEach(k => {
@@ -742,6 +784,12 @@
     });
     updatePreview();
   }
+
+  // ── 初期化（ページロード時に状態を復元） ──────────
+  document.addEventListener('DOMContentLoaded', () => {
+    restoreState();
+    updatePreview();
+  });
 </script>
 </body>
 </html>
