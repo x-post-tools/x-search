@@ -750,9 +750,14 @@
     const q = buildQuery();
     if (!q) return;
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
-    // 新タブで開こうとし、ブロックされた場合は同タブで開く
-    const w = window.open(url, '_blank', 'noopener');
-    if (!w) location.href = url;
+    // iOS Chrome (CriOS) は window.open(_blank) が空白タブを残すため同タブ遷移
+    const isIOSChrome = /CriOS/.test(navigator.userAgent);
+    if (isIOSChrome) {
+      location.href = url;
+    } else {
+      const w = window.open(url, '_blank', 'noopener');
+      if (!w) location.href = url;
+    }
   }
 
   // ── コピー ────────────────────────────────────
