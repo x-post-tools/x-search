@@ -636,12 +636,11 @@
     <div class="preview-header">
       <div class="preview-header-left">
         <span class="preview-label">生成されるクエリ</span>
-        <span class="preview-header-note">※検索ボタンを押せば自動で入力して検索されます。</span>
       </div>
       <button class="preview-copy" onclick="copyQuery()">コピー</button>
     </div>
     <div id="queryPreview" class="empty">条件を入力するとここに生成クエリが表示されます</div>
-    <div class="preview-footer-note">※クエリとは検索条件をまとめた検索コマンドです。手動でコピーしても使えます。</div>
+    <div class="preview-footer-note">※クエリとは検索条件をまとめた正式な検索コマンドです。手動でコピーしても使えますが下の検索ボタンを押せば自動で入力されます。</div>
   </div>
 
   <!-- ボタン -->
@@ -763,7 +762,7 @@
       el.classList.remove('empty');
       btn.disabled = false;
     } else {
-      el.textContent = '条件を入力するとここに表示されます';
+      el.textContent = '条件を入力するとここに生成クエリが表示されます';
       el.classList.add('empty');
       btn.disabled = true;
     }
