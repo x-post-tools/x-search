@@ -441,10 +441,11 @@
       padding: 2px 10px;
       cursor: pointer;
       letter-spacing: 0.5px;
-      transition: background 0.15s, color 0.15s;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
       white-space: nowrap;
     }
-    .reload-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .reload-btn:hover { background: rgba(168,85,247,0.15); border-color: #c084fc; color: #c084fc; box-shadow: 0 0 8px rgba(168,85,247,0.4); }
+    .reload-btn:active { background: rgba(168,85,247,0.3); box-shadow: 0 0 18px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); border-color: #e0a0ff; color: #f0c0ff; }
 
     .guide-body {
       display: none;
