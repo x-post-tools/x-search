@@ -799,14 +799,14 @@
     const q = buildQuery();
     if (!q) return;
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
-    // iOS Chrome (CriOS) は window.open(_blank) が空白タブを残すため同タブ遷移
-    const isIOSChrome = /CriOS/.test(navigator.userAgent);
-    if (isIOSChrome) {
-      location.href = url;
-    } else {
-      const w = window.open(url, '_blank', 'noopener');
-      if (!w) location.href = url;
-    }
+    // アンカークリック方式：window.open より履歴に余分なページが残らない
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   // ── コピー ────────────────────────────────────
