@@ -987,10 +987,8 @@
   // ── 自分のXプロフィールを開く ────────────────────────
   function openMyProfile() {
     const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
-    // FROM欄にIDがあればプロフィールへ、なければ設定のアカウント情報ページへ
-    const url = user
-      ? 'https://x.com/' + encodeURIComponent(user)
-      : 'https://x.com/settings/your_twitter_data/account';
+    if (!user) { alert('下の「ユーザー」欄の from: に自分のIDを入力してからボタンを押してください'); return; }
+    const url = 'https://x.com/' + encodeURIComponent(user);
     const a = document.createElement('a');
     a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
