@@ -702,6 +702,12 @@
     </div>
   </div>
 
+  <!-- ショートカットボタン（ユーザー直上） -->
+  <div class="btn-row" style="margin-bottom:8px;">
+    <button class="purple-btn" id="midSearchBtn" style="font-size:14px;" onclick="doSearch()">🔍 通常検索する</button>
+    <button class="clear-btn" style="font-size:14px;" onclick="clearAll()">すべてリセット</button>
+  </div>
+
   <!-- ユーザー -->
   <div class="section">
     <div class="section-header">
@@ -945,16 +951,19 @@
     const el = document.getElementById('queryPreview');
     const btn = document.getElementById('searchBtn');
     const topBtn = document.getElementById('topSearchBtn');
+    const midBtn = document.getElementById('midSearchBtn');
     if (q) {
       el.textContent = q;
       el.classList.remove('empty');
       btn.classList.add('has-query');
       if (topBtn) topBtn.classList.add('has-query');
+      if (midBtn) midBtn.classList.add('has-query');
     } else {
       el.textContent = '条件を入力するとここに生成クエリが表示されます';
       el.classList.add('empty');
       btn.classList.remove('has-query');
       if (topBtn) topBtn.classList.remove('has-query');
+      if (midBtn) midBtn.classList.remove('has-query');
     }
     saveState();
   }
