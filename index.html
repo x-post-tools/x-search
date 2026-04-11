@@ -981,6 +981,8 @@
       filters[k] = false;
       document.getElementById('btn-' + k).classList.remove('active');
     });
+    document.getElementById('firstYear').value = '';
+    document.getElementById('firstMonth').value = '1';
     updatePreview();
   }
 
