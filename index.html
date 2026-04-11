@@ -710,9 +710,56 @@
 
   <!-- ユーザー -->
   <div class="section">
-    <div class="section-header">
-      <div class="section-icon icon-purple">👤</div>
-      <span class="section-title">ユーザー</span>
+    <div class="section-header" style="flex-wrap:wrap; gap:6px;">
+      <div style="display:flex; align-items:center; gap:8px; flex:1;">
+        <div class="section-icon icon-purple">👤</div>
+        <span class="section-title">ユーザー</span>
+      </div>
+
+      <!-- マイID登録ウィジェット -->
+      <div id="myid-widget" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+
+        <!-- 状態A: 未登録 -->
+        <div id="myid-state-empty">
+          <button onclick="myidStartInput()"
+            style="background:transparent; border:1px solid #444; border-radius:6px; color:#666; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s;"
+            onmouseover="this.style.color='#a855f7'; this.style.borderColor='#a855f7';"
+            onmouseout="this.style.color='#666'; this.style.borderColor='#444';">
+            自分のIDを記録する
+          </button>
+        </div>
+
+        <!-- 状態B: 入力中 -->
+        <div id="myid-state-input" style="display:none; display:none; align-items:center; gap:4px;">
+          <input id="myid-input" type="text" placeholder="cadillac600" maxlength="50"
+            style="background:#0d0d0d; border:1px solid #a855f7; border-radius:6px; color:#fff; font-size:12px; padding:4px 8px; width:130px; outline:none;"
+            onkeydown="if(event.key==='Enter') myidSave();">
+          <button onclick="myidSave()"
+            style="background:#a855f7; border:none; border-radius:6px; color:#fff; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap;">
+            入力完了
+          </button>
+          <button onclick="myidCancel()"
+            style="background:transparent; border:1px solid #444; border-radius:6px; color:#666; font-size:11px; padding:4px 8px; cursor:pointer;">
+            ✕
+          </button>
+        </div>
+
+        <!-- 状態C: 登録済み -->
+        <div id="myid-state-saved" style="display:none; align-items:center; gap:4px; flex-wrap:wrap; justify-content:flex-end;">
+          <button onclick="myidAutoFill()"
+            style="background:#a855f7; border:none; border-radius:6px; color:#fff; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
+            onmouseover="this.style.background='#9333ea';" onmouseout="this.style.background='#a855f7';">
+            ID自動入力
+          </button>
+          <button onclick="myidClear()"
+            style="background:transparent; border:1px solid #444; border-radius:6px; color:#666; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s;"
+            onmouseover="this.style.color='#ff6b6b'; this.style.borderColor='#ff6b6b';"
+            onmouseout="this.style.color='#666'; this.style.borderColor='#444';">
+            記録したIDを消す
+          </button>
+        </div>
+
+      </div>
     </div>
     <div class="field-group">
       <div class="field" style="position:relative;">
@@ -1016,6 +1063,48 @@
     updatePreview();
   }
 
+  // ── マイID登録ウィジェット ────────────────────────────
+  const MYID_KEY = 'xsearch_myid_v2';
+
+  function myidRender() {
+    const saved = localStorage.getItem(MYID_KEY);
+    document.getElementById('myid-state-empty').style.display = saved ? 'none' : 'block';
+    document.getElementById('myid-state-input').style.display = 'none';
+    document.getElementById('myid-state-saved').style.display = saved ? 'flex' : 'none';
+  }
+
+  function myidStartInput() {
+    document.getElementById('myid-state-empty').style.display = 'none';
+    const inputDiv = document.getElementById('myid-state-input');
+    inputDiv.style.display = 'flex';
+    document.getElementById('myid-input').value = '';
+    document.getElementById('myid-input').focus();
+  }
+
+  function myidSave() {
+    const val = document.getElementById('myid-input').value.trim().replace(/^@/, '');
+    if (!val) { alert('IDを入力してください'); return; }
+    localStorage.setItem(MYID_KEY, val);
+    myidRender();
+  }
+
+  function myidCancel() {
+    myidRender();
+  }
+
+  function myidAutoFill() {
+    const saved = localStorage.getItem(MYID_KEY);
+    if (!saved) return;
+    document.getElementById('fromUser').value = saved;
+    updatePreview();
+    document.getElementById('fromUser').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function myidClear() {
+    localStorage.removeItem(MYID_KEY);
+    myidRender();
+  }
+
   // ── FROM欄カスタムオートコンプリート ─────────────────
   const FROM_HISTORY_KEY = 'xsearch_from_history';
   let hideTimer = null;
@@ -1156,6 +1245,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     restoreState();
     loadFromHistory();
+    myidRender();
     updatePreview();
   });
 
