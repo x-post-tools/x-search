@@ -43,7 +43,7 @@
       --accent: #1d9bf0;
       --accent-hover: #1a8cd8;
       --text: #e7e9ea;
-      --muted: #71767b;
+      --muted: #cecece;
       --danger: #f4212e;
       --green: #00ba7c;
       --radius: 12px;
@@ -606,7 +606,8 @@
       margin: 0 16px;
     }
 
-    input::placeholder { color: var(--muted); }
+    input::placeholder { color: #71767b; }
+    select::placeholder { color: #71767b; }
 
     @media (max-width: 400px) {
       .date-row, .count-row { grid-template-columns: 1fr; }
@@ -727,7 +728,7 @@
   <!-- 初ツイート探し -->
   <div style="background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px;">
     <div style="font-size:12px; color:#a855f7; font-weight:700; margin-bottom:8px; letter-spacing:0.5px;">🕰 初ツイート探し（月単位で絞り込み）</div>
-    <div style="font-size:11px; color:#888; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <div style="font-size:11px; color:#cecece; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
       <span>💡 初登録年月はXプロフィール →「アカウントについて」で確認できます。自分の過去のブログとしても活用できます。<span onclick="toggleTweetTips(); this.closest('.section') && window.scrollTo({top:document.getElementById('tweet-tips-panel').getBoundingClientRect().top + window.scrollY - 60, behavior:'smooth'});" class="glow-text-orange" style="color:#e07000; cursor:pointer; text-decoration:none; font-weight:700;" onmouseover="this.style.color='#ff8c00';" onmouseout="this.style.color='#e07000';">📖 使い方は必読！</span></span>
       <button onclick="openMyProfile()" style="background:#000; border:1px solid #a855f7; border-radius:6px; color:#a855f7; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;"
         onmouseover="this.style.boxShadow='0 0 8px rgba(168,85,247,0.5)'; this.style.color='#c084fc'; this.style.borderColor='#c084fc';"
@@ -856,7 +857,7 @@
             onmouseout="this.style.color='#777'; this.style.borderColor='#3a3a3a';">入力履歴を完全に削除</button>
         </label>
         <div class="input-wrap">
-          <span class="input-prefix">@</span>
+          <span class="input-prefix">＠</span>
           <input type="text" id="fromUser" class="has-prefix" placeholder="ユーザーID"
             autocomplete="off" oninput="updatePreview(); showFromSuggestions();"
             onfocus="showFromSuggestions()" onblur="hideFromSuggestions()">
@@ -866,14 +867,14 @@
       <div class="field">
         <label>このユーザー宛ての返信 (to:)</label>
         <div class="input-wrap">
-          <span class="input-prefix">@</span>
+          <span class="input-prefix">＠</span>
           <input type="text" id="toUser" class="has-prefix" placeholder="ユーザーID" oninput="updatePreview()">
         </div>
       </div>
       <div class="field">
         <label>メンションを含む (@mention)</label>
         <div class="input-wrap">
-          <span class="input-prefix">@</span>
+          <span class="input-prefix">＠</span>
           <input type="text" id="mention" class="has-prefix" placeholder="ユーザーID" oninput="updatePreview()">
         </div>
       </div>
