@@ -709,14 +709,15 @@
       <span class="section-title">ユーザー</span>
     </div>
     <div class="field-group">
-      <div class="field">
+      <div class="field" style="position:relative;">
         <label>このユーザーの投稿 (from:)</label>
         <div class="input-wrap">
           <span class="input-prefix">@</span>
           <input type="text" id="fromUser" class="has-prefix" placeholder="ユーザーID"
-            list="fromUser-suggestions" autocomplete="off" oninput="updatePreview()">
+            autocomplete="off" oninput="updatePreview(); showFromSuggestions();"
+            onfocus="showFromSuggestions()" onblur="hideFromSuggestions()">
         </div>
-        <datalist id="fromUser-suggestions"></datalist>
+        <div id="from-suggestions-list" style="display:none; position:absolute; top:100%; left:0; right:0; background:#16181c; border:1px solid #a855f7; border-radius:8px; z-index:100; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.6);"></div>
       </div>
       <div class="field">
         <label>このユーザー宛ての返信 (to:)</label>
@@ -1006,31 +1007,59 @@
     updatePreview();
   }
 
-  // ── FROM欄オートコンプリート（検索するたびに自動保存） ──
+  // ── FROM欄カスタムオートコンプリート ─────────────────
   const FROM_HISTORY_KEY = 'xsearch_from_history';
+  let hideTimer = null;
 
   function saveFromHistory(user) {
     if (!user) return;
     let list = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
-    list = [user, ...list.filter(v => v !== user)].slice(0, 10); // 最大10件・重複排除
+    list = [user, ...list.filter(v => v !== user)].slice(0, 10);
     localStorage.setItem(FROM_HISTORY_KEY, JSON.stringify(list));
-    updateFromDatalist(list);
-  }
-
-  function updateFromDatalist(list) {
-    const dl = document.getElementById('fromUser-suggestions');
-    if (!dl) return;
-    dl.innerHTML = list.map(v => `<option value="${v}">`).join('');
   }
 
   function loadFromHistory() {
-    const list = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
-    updateFromDatalist(list);
+    // 初期化のみ（表示はshowFromSuggestionsで行う）
+  }
+
+  function showFromSuggestions() {
+    const input = document.getElementById('fromUser');
+    const list = document.getElementById('from-suggestions-list');
+    const allIds = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
+    const val = input.value.trim().replace(/^@/, '').toLowerCase();
+    const filtered = val
+      ? allIds.filter(id => id.toLowerCase().includes(val))
+      : allIds;
+    if (filtered.length === 0) { list.style.display = 'none'; return; }
+    list.innerHTML = filtered.map(id =>
+      `<div onmousedown="pickFromSuggestion('${id}')"
+        style="padding:10px 14px; font-size:14px; color:#ccc; cursor:pointer; border-bottom:1px solid #2a2a2a; transition:background 0.1s;"
+        onmouseover="this.style.background='rgba(168,85,247,0.15)'; this.style.color='#e0b0ff';"
+        onmouseout="this.style.background=''; this.style.color='#ccc';">
+        <span style="color:#a855f7;">@</span>${id}
+      </div>`
+    ).join('');
+    list.style.display = 'block';
+  }
+
+  function hideFromSuggestions() {
+    hideTimer = setTimeout(() => {
+      const list = document.getElementById('from-suggestions-list');
+      if (list) list.style.display = 'none';
+    }, 150); // タップを拾うために少し遅らせる
+  }
+
+  function pickFromSuggestion(id) {
+    clearTimeout(hideTimer);
+    const input = document.getElementById('fromUser');
+    input.value = id;
+    document.getElementById('from-suggestions-list').style.display = 'none';
+    updatePreview();
   }
 
   function clearFromHistory() {
     localStorage.removeItem(FROM_HISTORY_KEY);
-    updateFromDatalist([]);
+    document.getElementById('from-suggestions-list').style.display = 'none';
     const btn = document.getElementById('clear-history-btn');
     btn.style.color = '#ff4444';
     btn.style.borderColor = '#ff4444';
