@@ -485,6 +485,14 @@
     }
     .guide-toggle-btn:hover { background: var(--accent-hover); }
 
+    @keyframes glow-orange {
+      0%, 100% { text-shadow: 0 0 6px rgba(224,112,0,0.5), 0 0 14px rgba(255,140,0,0.3); }
+      50%       { text-shadow: 0 0 14px rgba(255,160,0,0.9), 0 0 30px rgba(255,120,0,0.6), 0 0 50px rgba(255,80,0,0.3); }
+    }
+    .glow-text-orange {
+      animation: glow-orange 2s ease-in-out infinite;
+    }
+
     .reload-btn {
       font-size: 11px;
       font-weight: 700;
@@ -713,7 +721,7 @@
   <div style="background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px;">
     <div style="font-size:12px; color:#a855f7; font-weight:700; margin-bottom:8px; letter-spacing:0.5px;">🕰 初ツイート探し（月単位で絞り込み）</div>
     <div style="font-size:11px; color:#888; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-      <span>💡 登録年月はXプロフィール →「アカウントについて」で確認できます。自分の過去のブログとしても活用できます。<span onclick="toggleTweetTips(); this.closest('.section') && window.scrollTo({top:document.getElementById('tweet-tips-panel').getBoundingClientRect().top + window.scrollY - 60, behavior:'smooth'});" style="color:#e07000; cursor:pointer; text-decoration:none; font-weight:700;" onmouseover="this.style.color='#ff8c00';" onmouseout="this.style.color='#e07000';">📖 使い方は必読！</span></span>
+      <span>💡 登録年月はXプロフィール →「アカウントについて」で確認できます。自分の過去のブログとしても活用できます。<span onclick="toggleTweetTips(); this.closest('.section') && window.scrollTo({top:document.getElementById('tweet-tips-panel').getBoundingClientRect().top + window.scrollY - 60, behavior:'smooth'});" class="glow-text-orange" style="color:#e07000; cursor:pointer; text-decoration:none; font-weight:700;" onmouseover="this.style.color='#ff8c00';" onmouseout="this.style.color='#e07000';">📖 使い方は必読！</span></span>
       <button onclick="openMyProfile()" style="background:#000; border:1px solid #a855f7; border-radius:6px; color:#a855f7; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;"
         onmouseover="this.style.boxShadow='0 0 8px rgba(168,85,247,0.5)'; this.style.color='#c084fc'; this.style.borderColor='#c084fc';"
         onmouseout="this.style.boxShadow=''; this.style.color='#a855f7'; this.style.borderColor='#a855f7';">自分のXプロフィール欄を確認 →</button>
