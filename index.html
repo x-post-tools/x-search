@@ -651,9 +651,9 @@
     <div style="font-size:12px; color:#a855f7; font-weight:700; margin-bottom:8px; letter-spacing:0.5px;">🕰 初ツイート探し（月単位で絞り込み）</div>
     <div style="font-size:11px; color:#888; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
       <span>💡 登録年月はXプロフィール →「アカウントについて」で確認できます</span>
-      <button onclick="openMyProfile()" style="background:transparent; border:1px solid #444; border-radius:6px; color:#888; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s;"
-        onmouseover="this.style.color='#a855f7'; this.style.borderColor='#a855f7';"
-        onmouseout="this.style.color='#888'; this.style.borderColor='#444';">自分のXを確認 →</button>
+      <button onclick="openMyProfile()" style="background:#000; border:1px solid #a855f7; border-radius:6px; color:#a855f7; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;"
+        onmouseover="this.style.boxShadow='0 0 8px rgba(168,85,247,0.5)'; this.style.color='#c084fc'; this.style.borderColor='#c084fc';"
+        onmouseout="this.style.boxShadow=''; this.style.color='#a855f7'; this.style.borderColor='#a855f7';">自分のXを確認 →</button>
     </div>
     <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
       <input type="number" id="firstYear" placeholder="年 例:2008" min="2006" max="2030"
@@ -710,14 +710,12 @@
 
   <!-- ユーザー -->
   <div class="section">
-    <div class="section-header" style="flex-wrap:wrap; gap:6px;">
-      <div style="display:flex; align-items:center; gap:8px; flex:1;">
-        <div class="section-icon icon-purple">👤</div>
-        <span class="section-title">ユーザー</span>
-      </div>
+    <div class="section-header" style="flex-wrap:wrap; gap:8px; align-items:center;">
+      <div class="section-icon icon-purple">👤</div>
+      <span class="section-title">ユーザー</span>
 
-      <!-- マイID登録ウィジェット -->
-      <div id="myid-widget" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+      <!-- マイID登録ウィジェット（ユーザー真横） -->
+      <div id="myid-widget" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-left:2px;">
 
         <!-- 状態A: 未登録 -->
         <div id="myid-state-empty">
@@ -731,7 +729,7 @@
 
         <!-- 状態B: 入力中 -->
         <div id="myid-state-input" style="display:none; display:none; align-items:center; gap:4px;">
-          <input id="myid-input" type="text" placeholder="cadillac600" maxlength="50"
+          <input id="myid-input" type="text" placeholder="ユーザーID" maxlength="50"
             style="background:#0d0d0d; border:1px solid #a855f7; border-radius:6px; color:#fff; font-size:12px; padding:4px 8px; width:130px; outline:none;"
             onkeydown="if(event.key==='Enter') myidSave();">
           <button onclick="myidSave()"
