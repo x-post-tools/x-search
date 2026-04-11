@@ -677,6 +677,7 @@
     <button class="purple-btn" id="topSearchBtn" style="font-size:13px;" onclick="doSearch()">🔍 通常条件検索</button>
     <button class="purple-btn" style="font-size:13px;" onclick="randomTweet()">🎲 ランダム検索</button>
     <button class="purple-btn" style="font-size:13px;" onclick="toggleTweetTips()">📖 使い方</button>
+    <button class="purple-btn" style="font-size:13px;" onclick="toggleTweetTips()">閉じる</button>
   </div>
 
   <!-- ランダム・初ツイート使い方パネル -->
@@ -709,6 +710,11 @@
       2024年 8月（日経平均上げ幅歴代1位 +3,217円高の月）<br>
       など<br><br>
       ※残念ながらリーマンショックの2008年10月はTwitterがまだ日本で普及しておらず、当時のツイートはほぼ残っていません。
+    </div>
+    <div style="text-align:right; margin-top:10px;">
+      <button onclick="toggleTweetTips()" style="background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:var(--radius); font-size:14px; font-weight:600; padding:8px 18px; cursor:pointer; transition:background 0.15s, color 0.15s, box-shadow 0.15s;"
+        onmouseover="this.style.background='rgba(168,85,247,0.15)'; this.style.borderColor='#c084fc'; this.style.color='#c084fc'; this.style.boxShadow='0 0 8px rgba(168,85,247,0.4)';"
+        onmouseout="this.style.background=''; this.style.borderColor='#a855f7'; this.style.color='#a855f7'; this.style.boxShadow='';">閉じる</button>
     </div>
   </div>
 
