@@ -384,6 +384,21 @@
 
     .guide.open .guide-arrow { transform: rotate(180deg); }
 
+    .reload-btn {
+      font-size: 11px;
+      font-weight: 700;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 10px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .reload-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
     .guide-body {
       display: none;
       padding: 0 16px 14px;
@@ -491,6 +506,7 @@
         <span>📖</span>
         <span class="guide-title">使い方</span>
         <span class="guide-badge">GUIDE</span>
+        <button class="reload-btn" onclick="event.stopPropagation(); location.reload();">↺ 更新</button>
       </div>
       <span class="guide-arrow">▼</span>
     </div>
