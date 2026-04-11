@@ -1259,7 +1259,10 @@
 
   function clearFromHistory() {
     localStorage.removeItem(FROM_HISTORY_KEY);
-    document.getElementById('from-suggestions-list').style.display = 'none';
+    clearTimeout(hideTimer);
+    const list = document.getElementById('from-suggestions-list');
+    list.innerHTML = '';
+    list.style.display = 'none';
     const btn = document.getElementById('clear-history-btn');
     btn.style.color = '#ff4444';
     btn.style.borderColor = '#ff4444';
