@@ -400,13 +400,21 @@
       letter-spacing: 0.5px;
     }
 
-    .guide-arrow {
-      font-size: 11px;
-      color: var(--muted);
-      transition: transform 0.2s;
+    .guide-toggle-btn {
+      font-size: 10px;
+      font-weight: 700;
+      background: transparent;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+      border-radius: 10px;
+      padding: 2px 10px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
     }
-
-    .guide.open .guide-arrow { transform: rotate(180deg); }
+    .guide-toggle-btn:hover { background: var(--accent); color: #fff; }
+    .guide.open .guide-toggle-btn { background: var(--accent); color: #fff; }
 
     .reload-btn {
       font-size: 11px;
@@ -543,7 +551,7 @@
 <div class="container">
 
   <!-- 使い方ガイド -->
-  <div class="guide open" id="guide">
+  <div class="guide" id="guide">
     <div class="guide-header" onclick="toggleGuide()">
       <div class="guide-header-left">
         <span>📖</span>
@@ -551,7 +559,7 @@
         <span class="guide-badge">GUIDE</span>
         <button class="reload-btn" onclick="event.stopPropagation(); location.reload();">↺ 更新</button>
       </div>
-      <span class="guide-arrow">▼</span>
+      <button class="guide-toggle-btn" onclick="event.stopPropagation(); toggleGuide();" id="guide-toggle-label">使い方を見る</button>
     </div>
     <div class="guide-body">
       <div class="guide-steps">
@@ -761,7 +769,10 @@
 
   // ── ガイド ────────────────────────────────────
   function toggleGuide() {
-    document.getElementById('guide').classList.toggle('open');
+    const guide = document.getElementById('guide');
+    const btn = document.getElementById('guide-toggle-label');
+    guide.classList.toggle('open');
+    btn.textContent = guide.classList.contains('open') ? '閉じる' : '使い方を見る';
   }
 
   // ── フィルタートグル ──────────────────────────
