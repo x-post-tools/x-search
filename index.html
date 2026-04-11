@@ -956,7 +956,7 @@
   // ── 検索実行 ──────────────────────────────────
   function doSearch() {
     const q = buildQuery();
-    if (!q) return;
+    if (!q) { alert('検索条件が入力されていません。\nキーワードやユーザーIDなど、何か入力してから検索してください。'); return; }
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
     // アンカークリック方式：window.open より履歴に余分なページが残らない
     const a = document.createElement('a');
