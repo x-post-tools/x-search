@@ -612,6 +612,8 @@
         <div class="tip">自分の過去ツイートを探すなら「ユーザー」の <strong>from:</strong> に自分のIDを入れて日付で絞るのが基本</div>
         <div class="tip">バズったツイートを見つけたいなら「いいね数」に数値を入れるだけでOK</div>
         <div class="tip">クエリをコピーしてXの検索バーに貼り付けて使うこともできる</div>
+        <div class="tip">🎲 <strong>ランダム検索</strong> — FROM欄にIDを入れてボタンを押すと、過去のランダムな1ヶ月のツイートが表示される。何が出るかお楽しみ！</div>
+        <div class="tip">🕰 <strong>初ツイート探し</strong> — 登録年月を入力して月ごとに検索。登録年月はXプロフィール画面の「アカウントについて」で確認できる。0件なら「次の月 →」で進めばOK！</div>
       </div>
     </div>
   </div>
@@ -619,6 +621,42 @@
   <div class="btn-row">
     <button class="clear-btn" onclick="clearAll()">すべてリセット</button>
     <button class="jump-btn" onclick="document.getElementById('bottom-anchor').scrollIntoView({behavior:'smooth'})">最下部に移動 ↓</button>
+  </div>
+
+  <!-- ユーザー過去ツイート機能 -->
+  <div class="btn-row" style="margin-bottom:8px;">
+    <button class="purple-btn" style="font-size:13px;" onclick="randomTweet()">🎲 ランダム検索</button>
+    <button class="purple-btn" style="font-size:13px;" onclick="toggleTweetTips()">📖 使い方</button>
+  </div>
+
+  <!-- ランダム・初ツイート使い方パネル -->
+  <div id="tweet-tips-panel" style="display:none; background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px; font-size:13px; color:#ccc; line-height:1.8;">
+    <div style="color:#a855f7; font-weight:700; margin-bottom:6px;">🎲 ランダム検索</div>
+    <div style="margin-bottom:10px;">下の「ユーザー」欄の <strong style="color:#fff;">from:</strong> にXのユーザーIDを入れてからボタンを押すと、過去のランダムな1ヶ月のツイートが表示されます。何が出るかお楽しみ！</div>
+    <div style="color:#a855f7; font-weight:700; margin-bottom:6px;">🕰 初ツイート探し</div>
+    <div>登録年月から1ヶ月ずつ絞り込んで初ツイートを探せます。<br>💡 登録年月はXのプロフィール →「アカウントについて」で確認できます。</div>
+  </div>
+
+  <!-- 初ツイート探し -->
+  <div style="background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px;">
+    <div style="font-size:12px; color:#a855f7; font-weight:700; margin-bottom:8px; letter-spacing:0.5px;">🕰 初ツイート探し（月単位で絞り込み）</div>
+    <div style="font-size:11px; color:#888; margin-bottom:8px;">💡 登録年月はXプロフィール →「アカウントについて」で確認できます</div>
+    <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+      <input type="number" id="firstYear" placeholder="年 例:2009" min="2006" max="2030"
+        style="flex:2; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 10px; font-size:14px;">
+      <select id="firstMonth"
+        style="flex:1; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 6px; font-size:14px;">
+        <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+        <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+        <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+        <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="purple-btn" style="font-size:13px; padding:9px 6px;" onclick="firstTweetNav(-1)">← 前の月</button>
+      <button class="purple-btn" style="font-size:13px; padding:9px 6px; flex:2;" onclick="firstTweetSearch()">🔍 この月を検索</button>
+      <button class="purple-btn" style="font-size:13px; padding:9px 6px;" onclick="firstTweetNav(1)">次の月 →</button>
+    </div>
   </div>
 
   <!-- キーワード -->
@@ -647,32 +685,6 @@
           <input type="text" id="orB" placeholder="ワードB" oninput="updatePreview()">
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ユーザー用クイックボタン -->
-  <div class="btn-row" style="margin-bottom:8px;">
-    <button class="purple-btn" onclick="randomTweet()" title="FROM欄のユーザーの過去ツイートをランダムな時期で検索">🎲 ランダム検索</button>
-  </div>
-
-  <!-- 初ツイート探し -->
-  <div style="background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px;">
-    <div style="font-size:12px; color:#a855f7; font-weight:700; margin-bottom:8px; letter-spacing:0.5px;">🕰 初ツイート探し（月単位で絞り込み）</div>
-    <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
-      <input type="number" id="firstYear" placeholder="年 例:2009" min="2006" max="2030"
-        style="flex:2; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 10px; font-size:14px;">
-      <select id="firstMonth"
-        style="flex:1; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 6px; font-size:14px;">
-        <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
-        <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
-        <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
-        <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
-      </select>
-    </div>
-    <div style="display:flex; gap:6px;">
-      <button class="purple-btn" style="font-size:13px; padding:9px 6px;" onclick="firstTweetNav(-1)">← 前の月</button>
-      <button class="purple-btn" style="font-size:13px; padding:9px 6px; flex:2;" onclick="firstTweetSearch()">🔍 この月を検索</button>
-      <button class="purple-btn" style="font-size:13px; padding:9px 6px;" onclick="firstTweetNav(1)">次の月 →</button>
     </div>
   </div>
 
@@ -950,6 +962,12 @@
       document.getElementById('btn-' + k).classList.remove('active');
     });
     updatePreview();
+  }
+
+  // ── ランダム・初ツイート使い方パネル切り替え ─────────
+  function toggleTweetTips() {
+    const panel = document.getElementById('tweet-tips-panel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
   }
 
   // ── 初ツイート探し（月単位） ──────────────────────
