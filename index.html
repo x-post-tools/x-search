@@ -348,8 +348,14 @@
     }
 
     .clear-btn:hover {
+      background: rgba(255,50,50,0.1);
       border-color: var(--danger);
       color: var(--danger);
+      box-shadow: 0 0 8px rgba(255,50,50,0.25);
+    }
+    .clear-btn:active {
+      background: rgba(255,50,50,0.2);
+      box-shadow: 0 0 16px rgba(255,50,50,0.45);
     }
 
     .jump-btn {
@@ -367,8 +373,13 @@
     }
 
     .jump-btn:hover {
-      background: var(--accent);
-      color: #fff;
+      background: rgba(29,155,240,0.12);
+      color: var(--accent);
+      box-shadow: 0 0 8px rgba(29,155,240,0.3);
+    }
+    .jump-btn:active {
+      background: rgba(29,155,240,0.22);
+      box-shadow: 0 0 16px rgba(29,155,240,0.45);
     }
 
     .purple-btn {
@@ -720,9 +731,9 @@
         <!-- 状態A: 未登録 -->
         <div id="myid-state-empty">
           <button onclick="myidStartInput()"
-            style="background:transparent; border:1px solid #444; border-radius:6px; color:#666; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s;"
-            onmouseover="this.style.color='#a855f7'; this.style.borderColor='#a855f7';"
-            onmouseout="this.style.color='#666'; this.style.borderColor='#444';">
+            style="background:#000; border:1px solid #a855f7; border-radius:6px; color:#a855f7; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;"
+            onmouseover="this.style.background='rgba(168,85,247,0.15)'; this.style.color='#c084fc'; this.style.borderColor='#c084fc'; this.style.boxShadow='0 0 8px rgba(168,85,247,0.4)';"
+            onmouseout="this.style.background='#000'; this.style.color='#a855f7'; this.style.borderColor='#a855f7'; this.style.boxShadow='';">
             自分のIDを記録する
           </button>
         </div>
@@ -869,7 +880,9 @@
   <!-- オートコンプリート履歴クリア -->
   <div style="margin-top:16px; text-align:center;">
     <button id="clear-history-btn" onclick="clearFromHistory()"
-      style="background:#000; border:1px solid #333; border-radius:8px; color:#555; font-size:11px; padding:6px 16px; cursor:pointer; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;">
+      style="background:#111; border:1px solid #3a3a3a; border-radius:8px; color:#777; font-size:11px; padding:6px 16px; cursor:pointer; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;"
+      onmouseover="this.style.color='#aaa'; this.style.borderColor='#555';"
+      onmouseout="this.style.color='#777'; this.style.borderColor='#3a3a3a';">
       検索候補の履歴をすべて削除
     </button>
   </div>
