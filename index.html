@@ -327,10 +327,10 @@
     .search-btn:hover { background: var(--accent-hover); }
     .search-btn:active { transform: scale(0.98); }
 
-    .search-btn:disabled {
+    .search-btn.no-query {
       background: var(--border);
       color: var(--muted);
-      cursor: not-allowed;
+      cursor: pointer;
       border: 1.5px solid #7c3aed;
     }
 
@@ -944,11 +944,11 @@
     if (q) {
       el.textContent = q;
       el.classList.remove('empty');
-      btn.disabled = false;
+      btn.classList.remove('no-query');
     } else {
       el.textContent = '条件を入力するとここに生成クエリが表示されます';
       el.classList.add('empty');
-      btn.disabled = true;
+      btn.classList.add('no-query');
     }
     saveState();
   }
