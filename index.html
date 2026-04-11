@@ -640,7 +640,12 @@
   <!-- 初ツイート探し -->
   <div style="background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px;">
     <div style="font-size:12px; color:#a855f7; font-weight:700; margin-bottom:8px; letter-spacing:0.5px;">🕰 初ツイート探し（月単位で絞り込み）</div>
-    <div style="font-size:11px; color:#888; margin-bottom:8px;">💡 登録年月はXプロフィール →「アカウントについて」で確認できます</div>
+    <div style="font-size:11px; color:#888; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span>💡 登録年月はXプロフィール →「アカウントについて」で確認できます</span>
+      <button onclick="openMyProfile()" style="background:transparent; border:1px solid #444; border-radius:6px; color:#888; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s;"
+        onmouseover="this.style.color='#a855f7'; this.style.borderColor='#a855f7';"
+        onmouseout="this.style.color='#888'; this.style.borderColor='#444';">自分のXを確認 →</button>
+    </div>
     <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
       <input type="number" id="firstYear" placeholder="年 例:2009" min="2006" max="2030"
         style="flex:2; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 10px; font-size:14px;">
@@ -977,6 +982,18 @@
       document.getElementById('btn-' + k).classList.remove('active');
     });
     updatePreview();
+  }
+
+  // ── 自分のXプロフィールを開く ────────────────────────
+  function openMyProfile() {
+    const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
+    // FROM欄にIDがあればプロフィールへ、なければ設定のアカウント情報ページへ
+    const url = user
+      ? 'https://x.com/' + encodeURIComponent(user)
+      : 'https://x.com/settings/your_twitter_data/account';
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 
   // ── ランダム・初ツイート使い方パネル切り替え ─────────
