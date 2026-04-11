@@ -814,8 +814,16 @@
 
   <div id="bottom-anchor"></div>
 
+  <!-- オートコンプリート履歴クリア -->
+  <div style="margin-top:16px; text-align:center;">
+    <button id="clear-history-btn" onclick="clearFromHistory()"
+      style="background:#000; border:1px solid #333; border-radius:8px; color:#555; font-size:11px; padding:6px 16px; cursor:pointer; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;">
+      検索候補の履歴をすべて削除
+    </button>
+  </div>
+
   <!-- フィードバック -->
-  <div style="margin-top:32px; padding:16px 0 8px; border-top:1px solid #1e1e1e; text-align:center;">
+  <div style="margin-top:16px; padding:16px 0 8px; border-top:1px solid #1e1e1e; text-align:center;">
     <p style="font-size:11px; color:#444; line-height:1.9; letter-spacing:0.3px;">
       バグ・エラー報告や改善リクエストは<br>
       <a href="https://x.com/cadillac600" target="_blank" rel="noopener noreferrer"
@@ -1018,6 +1026,22 @@
   function loadFromHistory() {
     const list = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
     updateFromDatalist(list);
+  }
+
+  function clearFromHistory() {
+    localStorage.removeItem(FROM_HISTORY_KEY);
+    updateFromDatalist([]);
+    const btn = document.getElementById('clear-history-btn');
+    btn.style.color = '#ff4444';
+    btn.style.borderColor = '#ff4444';
+    btn.style.boxShadow = '0 0 10px rgba(255,50,50,0.6), 0 0 24px rgba(255,50,50,0.3)';
+    btn.textContent = '✓ 削除しました';
+    setTimeout(() => {
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      btn.style.boxShadow = '';
+      btn.textContent = '検索候補の履歴をすべて削除';
+    }, 1800);
   }
 
   // ── 自分のXプロフィールを開く ────────────────────────
