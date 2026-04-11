@@ -311,6 +311,7 @@
       background: var(--accent);
       color: #fff;
       border: none;
+      display: none;
       border-radius: var(--radius);
       font-size: 16px;
       font-weight: 700;
@@ -327,12 +328,6 @@
     .search-btn:hover { background: var(--accent-hover); }
     .search-btn:active { transform: scale(0.98); }
 
-    .search-btn.no-query {
-      background: var(--border);
-      color: var(--muted);
-      cursor: pointer;
-      border: 1.5px solid #7c3aed;
-    }
 
     .btn-row {
       display: flex;
@@ -391,6 +386,19 @@
     }
     .purple-btn:hover { background: rgba(168,85,247,0.15); border-color: #c084fc; color: #c084fc; box-shadow: 0 0 8px rgba(168,85,247,0.4); }
     .purple-btn:active { background: rgba(168,85,247,0.3); box-shadow: 0 0 18px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); border-color: #e0a0ff; color: #f0c0ff; }
+    .purple-btn.has-query { background: #a855f7; color: #fff; border-color: #a855f7; }
+    .purple-btn.has-query:hover { background: #9333ea; border-color: #9333ea; color: #fff; box-shadow: 0 0 12px rgba(168,85,247,0.5); }
+    .purple-btn.has-query:active { background: #7e22ce; box-shadow: 0 0 20px rgba(168,85,247,0.8); color: #fff; }
+
+    .search-bottom-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+      flex: none;
+    }
 
     /* 使い方ガイド */
     .guide {
@@ -625,7 +633,7 @@
 
   <!-- ユーザー過去ツイート機能 -->
   <div class="btn-row" style="margin-bottom:8px;">
-    <button class="purple-btn" style="font-size:13px;" onclick="doSearch()">🔍 通常条件検索</button>
+    <button class="purple-btn" id="topSearchBtn" style="font-size:13px;" onclick="doSearch()">🔍 通常条件検索</button>
     <button class="purple-btn" style="font-size:13px;" onclick="randomTweet()">🎲 ランダム検索</button>
     <button class="purple-btn" style="font-size:13px;" onclick="toggleTweetTips()">📖 使い方</button>
   </div>
@@ -806,11 +814,8 @@
   </div>
 
   <!-- ボタン -->
-  <button class="search-btn" id="searchBtn" onclick="doSearch()" disabled>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-      <path d="M10.25 3.75c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c1.795 0 3.419-.726 4.596-1.904 1.178-1.177 1.904-2.801 1.904-4.596 0-3.59-2.91-6.5-6.5-6.5zm-8.5 6.5c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5c0 1.986-.682 3.815-1.814 5.272l4.021 4.021-1.414 1.414-4.021-4.021A8.463 8.463 0 0 1 10.25 18.75c-4.694 0-8.5-3.806-8.5-8.5z"/>
-    </svg>
-    X で検索する
+  <button class="purple-btn search-bottom-btn" id="searchBtn" onclick="doSearch()">
+    🔍 X通常条件検索する
   </button>
 
   <div class="btn-row">
@@ -941,14 +946,17 @@
     const q = buildQuery();
     const el = document.getElementById('queryPreview');
     const btn = document.getElementById('searchBtn');
+    const topBtn = document.getElementById('topSearchBtn');
     if (q) {
       el.textContent = q;
       el.classList.remove('empty');
-      btn.classList.remove('no-query');
+      btn.classList.add('has-query');
+      if (topBtn) topBtn.classList.add('has-query');
     } else {
       el.textContent = '条件を入力するとここに生成クエリが表示されます';
       el.classList.add('empty');
-      btn.classList.add('no-query');
+      btn.classList.remove('has-query');
+      if (topBtn) topBtn.classList.remove('has-query');
     }
     saveState();
   }
