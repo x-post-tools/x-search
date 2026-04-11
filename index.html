@@ -831,7 +831,13 @@
     </div>
     <div class="field-group">
       <div class="field" style="position:relative;">
-        <label>このユーザーの投稿 (from:)</label>
+        <label style="display:flex; align-items:center; justify-content:space-between;">
+          <span>このユーザーの投稿 (from:)</span>
+          <button id="clear-history-btn" onclick="clearFromHistory()"
+            style="background:#111; border:1px solid #3a3a3a; border-radius:6px; color:#777; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;"
+            onmouseover="this.style.color='#aaa'; this.style.borderColor='#555';"
+            onmouseout="this.style.color='#777'; this.style.borderColor='#3a3a3a';">履歴を完全に削除</button>
+        </label>
         <div class="input-wrap">
           <span class="input-prefix">@</span>
           <input type="text" id="fromUser" class="has-prefix" placeholder="ユーザーID"
@@ -946,15 +952,6 @@
 
   <div id="bottom-anchor"></div>
 
-  <!-- オートコンプリート履歴クリア -->
-  <div style="margin-top:16px; text-align:center;">
-    <button id="clear-history-btn" onclick="clearFromHistory()"
-      style="background:#111; border:1px solid #3a3a3a; border-radius:8px; color:#777; font-size:11px; padding:6px 16px; cursor:pointer; transition:color 0.2s, border-color 0.2s, box-shadow 0.2s;"
-      onmouseover="this.style.color='#aaa'; this.style.borderColor='#555';"
-      onmouseout="this.style.color='#777'; this.style.borderColor='#3a3a3a';">
-      検索候補の履歴をすべて削除
-    </button>
-  </div>
 
   <!-- フィードバック＆シェア -->
   <div style="margin-top:16px; padding:16px 0 8px; border-top:1px solid #1e1e1e; text-align:center;">
@@ -1272,7 +1269,7 @@
       btn.style.color = '';
       btn.style.borderColor = '';
       btn.style.boxShadow = '';
-      btn.textContent = '検索候補の履歴をすべて削除';
+      btn.textContent = '履歴を完全に削除';
     }, 1800);
   }
 
