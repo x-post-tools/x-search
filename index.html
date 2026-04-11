@@ -909,6 +909,26 @@
     restoreState();
     updatePreview();
   });
+
+  // ── 横スワイプ防止（ピンチズームは許可） ──────────
+  (function() {
+    let startX = 0, startY = 0;
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        startX = e.touches[0].pageX;
+        startY = e.touches[0].pageY;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) return; // ピンチズームは通す
+      const dx = Math.abs(e.touches[0].pageX - startX);
+      const dy = Math.abs(e.touches[0].pageY - startY);
+      if (dx > dy && dx > 6) {
+        e.preventDefault(); // 横スワイプをブロック
+      }
+    }, { passive: false });
+  })();
 </script>
 </body>
 </html>
