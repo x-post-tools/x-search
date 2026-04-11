@@ -692,7 +692,11 @@
     </div>
     <div class="field-group">
       <div class="field">
-        <label>キーワード（スペース区切りでAND検索）</label>
+        <label style="display:flex; align-items:center; justify-content:space-between;">
+          <span>キーワード（スペース区切りでAND検索）</span>
+          <button id="keyword-myid-btn" onclick="myidAutoFill()" style="display:none; background:#a855f7; border:none; border-radius:6px; color:#fff; font-size:10px; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
+            onmouseover="this.style.background='#9333ea';" onmouseout="this.style.background='#a855f7';">MY ID自動入力</button>
+        </label>
         <input type="text" id="keyword" placeholder="例: 5000兆円 欲しい！" oninput="updatePreview()">
       </div>
       <div class="field">
@@ -758,7 +762,7 @@
           <button onclick="myidAutoFill()"
             style="background:#a855f7; border:none; border-radius:6px; color:#fff; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
             onmouseover="this.style.background='#9333ea';" onmouseout="this.style.background='#a855f7';">
-            ID自動入力
+            MY ID自動入力
           </button>
           <button onclick="myidClear()"
             style="background:transparent; border:1px solid #444; border-radius:6px; color:#666; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:color 0.2s, border-color 0.2s;"
@@ -1082,6 +1086,8 @@
     document.getElementById('myid-state-empty').style.display = saved ? 'none' : 'block';
     document.getElementById('myid-state-input').style.display = 'none';
     document.getElementById('myid-state-saved').style.display = saved ? 'flex' : 'none';
+    const kwBtn = document.getElementById('keyword-myid-btn');
+    if (kwBtn) kwBtn.style.display = saved ? 'inline-block' : 'none';
   }
 
   function myidStartInput() {
