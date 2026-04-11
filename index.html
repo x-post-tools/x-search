@@ -1200,6 +1200,7 @@
   // ── FROM欄カスタムオートコンプリート ─────────────────
   const FROM_HISTORY_KEY = 'xsearch_from_history';
   let hideTimer = null;
+  let suppressSuggestions = false;
 
   function saveFromHistory(user) {
     if (!user) return;
@@ -1228,6 +1229,7 @@
   }
 
   function showFromSuggestions() {
+    if (suppressSuggestions) return;
     const input = document.getElementById('fromUser');
     const list = document.getElementById('from-suggestions-list');
     const allIds = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
@@ -1264,10 +1266,12 @@
 
   function clearFromHistory() {
     localStorage.removeItem(FROM_HISTORY_KEY);
+    suppressSuggestions = true;
     clearTimeout(hideTimer);
     const list = document.getElementById('from-suggestions-list');
     list.innerHTML = '';
     list.style.display = 'none';
+    setTimeout(() => { suppressSuggestions = false; }, 500);
     const btn = document.getElementById('clear-history-btn');
     btn.style.color = '#ff4444';
     btn.style.borderColor = '#ff4444';
