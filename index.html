@@ -8,6 +8,11 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; max-width: 100%; }
 
+    html {
+      overflow-x: hidden;
+      width: 100%;
+    }
+
     :root {
       --bg: #000;
       --surface: #16181c;
@@ -29,6 +34,7 @@
       padding-bottom: 40px;
       overflow-x: hidden;
       width: 100%;
+      touch-action: pan-y pinch-zoom;
     }
 
     header {
@@ -55,11 +61,13 @@
 
     .container {
       max-width: 560px;
+      width: 100%;
       margin: 0 auto;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      overflow-x: hidden;
     }
 
     .section {
