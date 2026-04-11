@@ -376,6 +376,22 @@
       color: #fff;
     }
 
+    .purple-btn {
+      flex: 1;
+      background: transparent;
+      color: #a855f7;
+      border: 1px solid #a855f7;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+    .purple-btn:hover { background: rgba(168,85,247,0.15); border-color: #c084fc; color: #c084fc; box-shadow: 0 0 8px rgba(168,85,247,0.4); }
+    .purple-btn:active { background: rgba(168,85,247,0.3); box-shadow: 0 0 18px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); border-color: #e0a0ff; color: #f0c0ff; }
+
     /* 使い方ガイド */
     .guide {
       background: linear-gradient(135deg, rgba(29,155,240,0.08) 0%, rgba(120,86,255,0.08) 100%);
@@ -632,6 +648,12 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ユーザー用クイックボタン -->
+  <div class="btn-row" style="margin-bottom:8px;">
+    <button class="purple-btn" onclick="firstTweet()" title="FROM欄のユーザーの初期ツイート時代を検索">🕰 初ツイート</button>
+    <button class="purple-btn" onclick="randomTweet()" title="FROM欄のユーザーの過去ツイートをランダムな時期で検索">🎲 ランダム検索</button>
   </div>
 
   <!-- ユーザー -->
@@ -908,6 +930,39 @@
       document.getElementById('btn-' + k).classList.remove('active');
     });
     updatePreview();
+  }
+
+  // ── 初ツイート検索 ────────────────────────────────
+  function firstTweet() {
+    const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
+    if (!user) { alert('FROM欄にユーザーIDを入力してください'); return; }
+    // Twitterは2006年創業。初期の2年間を幅広く検索
+    const url = 'https://x.com/search?q=from%3A' + encodeURIComponent(user)
+      + '%20since%3A2006-01-01%20until%3A2014-01-01&src=typed_query&f=live';
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+
+  // ── ランダム過去ツイート検索 ──────────────────────
+  function randomTweet() {
+    const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
+    if (!user) { alert('FROM欄にユーザーIDを入力してください'); return; }
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    // 2010〜去年の間でランダムな年月を選ぶ
+    const startYear = 2010;
+    const randYear = startYear + Math.floor(Math.random() * (currentYear - startYear));
+    const randMonth = Math.floor(Math.random() * 12) + 1;
+    const since = randYear + '-' + String(randMonth).padStart(2,'0') + '-01';
+    const untilMonth = randMonth === 12 ? 1 : randMonth + 1;
+    const untilYear = randMonth === 12 ? randYear + 1 : randYear;
+    const until = untilYear + '-' + String(untilMonth).padStart(2,'0') + '-01';
+    const url = 'https://x.com/search?q=from%3A' + encodeURIComponent(user)
+      + '%20since%3A' + since + '%20until%3A' + until + '&src=typed_query&f=live';
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 
   // ── 初期化（ページロード時に状態を復元） ──────────
