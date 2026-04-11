@@ -710,24 +710,13 @@
     </div>
     <div class="field-group">
       <div class="field">
-        <label style="display:flex; align-items:center; justify-content:space-between;">
-          <span>このユーザーの投稿 (from:)</span>
-          <span style="display:flex; gap:6px;">
-            <button onclick="saveMyId()" id="save-id-btn"
-              style="background:transparent; border:1px solid #444; border-radius:6px; color:#888; font-size:10px; padding:2px 8px; cursor:pointer; transition:color 0.2s, border-color 0.2s;"
-              onmouseover="this.style.color='#a855f7'; this.style.borderColor='#a855f7';"
-              onmouseout="this.style.color='#888'; this.style.borderColor='#444';">💾 記憶する</button>
-            <button onclick="clearMyId()" id="clear-id-btn"
-              style="display:none; background:transparent; border:1px solid #444; border-radius:6px; color:#888; font-size:10px; padding:2px 8px; cursor:pointer; transition:color 0.2s, border-color 0.2s;"
-              onmouseover="this.style.color='#ff6b6b'; this.style.borderColor='#ff6b6b';"
-              onmouseout="this.style.color='#888'; this.style.borderColor='#444';">✕ 記憶を消す</button>
-          </span>
-        </label>
+        <label>このユーザーの投稿 (from:)</label>
         <div class="input-wrap">
           <span class="input-prefix">@</span>
-          <input type="text" id="fromUser" class="has-prefix" placeholder="ユーザーID" oninput="updatePreview()">
+          <input type="text" id="fromUser" class="has-prefix" placeholder="ユーザーID"
+            list="fromUser-suggestions" autocomplete="off" oninput="updatePreview()">
         </div>
-        <div id="saved-id-notice" style="display:none; font-size:10px; color:#a855f7; margin-top:4px;">✓ このIDを記憶中（次回から自動入力されます）</div>
+        <datalist id="fromUser-suggestions"></datalist>
       </div>
       <div class="field">
         <label>このユーザー宛ての返信 (to:)</label>
@@ -965,6 +954,7 @@
   function doSearch() {
     const q = buildQuery();
     if (!q) { alert('検索条件が入力されていません。\nキーワードやユーザーIDなど、何か入力してから検索してください。'); return; }
+    saveFromHistory(document.getElementById('fromUser').value.trim().replace(/^@/, ''));
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
     // アンカークリック方式：window.open より履歴に余分なページが残らない
     const a = document.createElement('a');
@@ -1008,47 +998,26 @@
     updatePreview();
   }
 
-  // ── マイID記憶機能 ────────────────────────────────────
-  const MY_ID_KEY = 'xsearch_myid';
+  // ── FROM欄オートコンプリート（検索するたびに自動保存） ──
+  const FROM_HISTORY_KEY = 'xsearch_from_history';
 
-  function saveMyId() {
-    const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
-    if (!user) { alert('from: 欄にユーザーIDを入力してから「記憶する」を押してください'); return; }
-    localStorage.setItem(MY_ID_KEY, user);
-    updateMyIdUI(user);
-    const btn = document.getElementById('save-id-btn');
-    const orig = btn.textContent;
-    btn.textContent = '✓ 記憶しました！';
-    btn.style.color = '#a855f7';
-    btn.style.borderColor = '#a855f7';
-    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 1500);
+  function saveFromHistory(user) {
+    if (!user) return;
+    let list = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
+    list = [user, ...list.filter(v => v !== user)].slice(0, 10); // 最大10件・重複排除
+    localStorage.setItem(FROM_HISTORY_KEY, JSON.stringify(list));
+    updateFromDatalist(list);
   }
 
-  function clearMyId() {
-    localStorage.removeItem(MY_ID_KEY);
-    updateMyIdUI(null);
+  function updateFromDatalist(list) {
+    const dl = document.getElementById('fromUser-suggestions');
+    if (!dl) return;
+    dl.innerHTML = list.map(v => `<option value="${v}">`).join('');
   }
 
-  function updateMyIdUI(id) {
-    const notice = document.getElementById('saved-id-notice');
-    const clearBtn = document.getElementById('clear-id-btn');
-    if (id) {
-      notice.style.display = 'block';
-      clearBtn.style.display = 'inline-block';
-    } else {
-      notice.style.display = 'none';
-      clearBtn.style.display = 'none';
-    }
-  }
-
-  function loadMyId() {
-    const saved = localStorage.getItem(MY_ID_KEY);
-    if (saved) {
-      const el = document.getElementById('fromUser');
-      if (!el.value) el.value = saved; // 空欄のときだけ自動入力
-      updateMyIdUI(saved);
-      updatePreview();
-    }
+  function loadFromHistory() {
+    const list = JSON.parse(localStorage.getItem(FROM_HISTORY_KEY) || '[]');
+    updateFromDatalist(list);
   }
 
   // ── 自分のXプロフィールを開く ────────────────────────
@@ -1071,6 +1040,7 @@
   function firstTweetSearch() {
     const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
     if (!user) { alert('FROM欄にユーザーIDを入力してください'); return; }
+    saveFromHistory(user);
     const year = parseInt(document.getElementById('firstYear').value);
     const month = parseInt(document.getElementById('firstMonth').value);
     if (!year || year < 2006 || year > 2030) { alert('年を正しく入力してください（例: 2009）'); return; }
@@ -1102,6 +1072,7 @@
   function randomTweet() {
     const user = document.getElementById('fromUser').value.trim().replace(/^@/, '');
     if (!user) { alert('FROM欄にユーザーIDを入力してください'); return; }
+    saveFromHistory(user);
     const now = new Date();
     const currentYear = now.getFullYear();
     // 2010〜去年の間でランダムな年月を選ぶ
@@ -1122,7 +1093,7 @@
   // ── 初期化（ページロード時に状態を復元） ──────────
   document.addEventListener('DOMContentLoaded', () => {
     restoreState();
-    loadMyId();
+    loadFromHistory();
     updatePreview();
   });
 
