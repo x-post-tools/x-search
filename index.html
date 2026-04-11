@@ -482,6 +482,18 @@
       line-height: 1.5;
     }
 
+    .count-notice {
+      font-size: 11px;
+      color: #a07a00;
+      background: rgba(255, 200, 0, 0.08);
+      border: 1px solid rgba(255, 200, 0, 0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .count-notice strong { color: #c49a00; background: transparent; }
+
     .divider {
       height: 1px;
       background: var(--border);
@@ -639,6 +651,7 @@
           <input type="number" id="minRetweets" placeholder="例: 10" min="0" oninput="updatePreview()">
         </div>
       </div>
+      <p class="count-notice">⚠️ いいね数・RT数の絞り込みは<strong>X側の検索システムの不安定さ</strong>により、該当投稿があっても結果に表示されないことがあります。ツールの不具合ではなくX側の既知の問題です。</p>
     </div>
   </div>
 
