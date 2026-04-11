@@ -318,8 +318,13 @@
       cursor: not-allowed;
     }
 
+    .btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
     .clear-btn {
-      width: 100%;
+      flex: 1;
       background: transparent;
       color: var(--muted);
       border: 1px solid var(--border);
@@ -334,6 +339,25 @@
     .clear-btn:hover {
       border-color: var(--danger);
       color: var(--danger);
+    }
+
+    .jump-btn {
+      flex: 1;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .jump-btn:hover {
+      background: var(--accent);
+      color: #fff;
     }
 
     /* 使い方ガイド */
@@ -552,7 +576,10 @@
     </div>
   </div>
 
-  <button class="clear-btn" onclick="clearAll()">すべてリセット</button>
+  <div class="btn-row">
+    <button class="clear-btn" onclick="clearAll()">すべてリセット</button>
+    <button class="jump-btn" onclick="document.getElementById('bottom-anchor').scrollIntoView({behavior:'smooth'})">最下部に移動 ↓</button>
+  </div>
 
   <!-- キーワード -->
   <div class="section">
@@ -689,8 +716,12 @@
     X で検索する
   </button>
 
-  <button class="clear-btn" onclick="clearAll()">すべてリセット</button>
+  <div class="btn-row">
+    <button class="clear-btn" onclick="clearAll()">すべてリセット</button>
+    <button class="jump-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">最上部に移動 ↑</button>
+  </div>
 
+  <div id="bottom-anchor"></div>
 </div>
 
 <script>
