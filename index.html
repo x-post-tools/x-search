@@ -164,7 +164,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       color: var(--text);
-      font-size: 15px;
+      font-size: 16px; /* iOS自動ズーム防止（16px未満でズームイン発生） */
       padding: 10px 12px;
       outline: none;
       transition: border-color 0.15s;
@@ -685,10 +685,10 @@
     </div>
     <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
       <select id="firstYear"
-        style="flex:2; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 10px; font-size:14px;">
+        style="flex:2; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 10px; font-size:16px;">
       </select>
       <select id="firstMonth"
-        style="flex:1; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 6px; font-size:14px;">
+        style="flex:1; background:#0d0d0d; border:1px solid #3a3a3a; border-radius:8px; color:#fff; padding:8px 6px; font-size:16px;">
         <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
         <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
         <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
@@ -766,7 +766,7 @@
         <!-- 状態B: 入力中 -->
         <div id="myid-state-input" style="display:none; display:none; align-items:center; gap:4px;">
           <input id="myid-input" type="text" placeholder="ユーザーID" maxlength="50"
-            style="background:#0d0d0d; border:1px solid #a855f7; border-radius:6px; color:#fff; font-size:12px; padding:4px 8px; width:130px; outline:none;"
+            style="background:#0d0d0d; border:1px solid #a855f7; border-radius:6px; color:#fff; font-size:16px; padding:4px 8px; width:130px; outline:none;"
             onkeydown="if(event.key==='Enter') myidSave();">
           <button onclick="myidSave()"
             style="background:#a855f7; border:none; border-radius:6px; color:#fff; font-size:11px; padding:4px 10px; cursor:pointer; white-space:nowrap;">
