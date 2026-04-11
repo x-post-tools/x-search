@@ -683,9 +683,10 @@
   <div id="tweet-tips-panel" style="display:none; background:#16181c; border:1px solid #a855f7; border-radius:12px; padding:12px; margin-bottom:8px; font-size:13px; color:#ccc; line-height:1.8;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
       <div style="color:#a855f7; font-weight:700;">🎲 ランダム検索</div>
-      <button onclick="toggleTweetTips()" style="background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:var(--radius); font-size:11px; font-weight:600; padding:4px 10px; cursor:pointer; transition:background 0.15s, color 0.15s, box-shadow 0.15s;"
+      <button onclick="toggleTweetTips()" style="-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:var(--radius); font-size:11px; font-weight:600; padding:4px 10px; cursor:pointer; transition:background 0.15s, color 0.15s, box-shadow 0.15s; -webkit-tap-highlight-color:transparent; outline:none;"
         onmouseover="this.style.background='rgba(168,85,247,0.15)'; this.style.borderColor='#c084fc'; this.style.color='#c084fc'; this.style.boxShadow='0 0 8px rgba(168,85,247,0.4)';"
-        onmouseout="this.style.background=''; this.style.borderColor='#a855f7'; this.style.color='#a855f7'; this.style.boxShadow='';">閉じる</button>
+        onmouseout="this.style.background='transparent'; this.style.borderColor='#a855f7'; this.style.color='#a855f7'; this.style.boxShadow='';"
+        onfocus="this.style.background='transparent';" onblur="this.style.background='transparent';">閉じる</button>
     </div>
     <div style="margin-bottom:10px;">下の「ユーザー」欄の <strong style="color:#fff;">from:</strong> にXのユーザーIDを入れてからボタンを押すと、過去のランダムな、いつの年月かわからない！ランダムに選択された1ヶ月のツイートが表示されます。何が出るかはお楽しみ！</div>
     <div style="color:#a855f7; font-weight:700; margin-bottom:6px;">🕰 初ツイート探し <span style="font-size:11px; font-weight:400; color:#aaa;">※過去の自分のブログとしても活用できます。</span></div>
@@ -716,9 +717,10 @@
       ※残念ながらリーマンショックの2008年10月はTwitterがまだ日本で普及しておらず、当時のツイートはほぼ残っていません。
     </div>
     <div style="text-align:right; margin-top:10px;">
-      <button onclick="toggleTweetTips()" style="background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:var(--radius); font-size:11px; font-weight:600; padding:4px 10px; cursor:pointer; transition:background 0.15s, color 0.15s, box-shadow 0.15s;"
+      <button onclick="toggleTweetTips(); window.scrollTo({top:0, behavior:'smooth'});" style="-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:var(--radius); font-size:11px; font-weight:600; padding:4px 10px; cursor:pointer; transition:background 0.15s, color 0.15s, box-shadow 0.15s; -webkit-tap-highlight-color:transparent; outline:none;"
         onmouseover="this.style.background='rgba(168,85,247,0.15)'; this.style.borderColor='#c084fc'; this.style.color='#c084fc'; this.style.boxShadow='0 0 8px rgba(168,85,247,0.4)';"
-        onmouseout="this.style.background=''; this.style.borderColor='#a855f7'; this.style.color='#a855f7'; this.style.boxShadow='';">閉じる</button>
+        onmouseout="this.style.background='transparent'; this.style.borderColor='#a855f7'; this.style.color='#a855f7'; this.style.boxShadow='';"
+        onfocus="this.style.background='transparent';" onblur="this.style.background='transparent';">閉じる</button>
     </div>
   </div>
 
