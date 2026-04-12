@@ -951,6 +951,7 @@
       <div class="section-icon icon-blue" style="font-size:15px;">🔎</div>
       <span class="section-title">ユーザーを探す</span>
       <span style="font-size:11px; font-weight:600; color:var(--muted);">[ID調べツール]</span>
+      <button onclick="showToast('💡 表示名・ニックネームで検索\n→ Xのユーザー一覧が別タブで開きます。\n\n本人を見つけたら @ID をコピーして\n下の from: 欄に貼り付けてください。', 4000)" class="purple-btn" style="flex:0 0 auto; font-size:10px; padding:2px 8px;">使い方</button>
     </div>
     <div style="display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
@@ -958,10 +959,6 @@
         onkeydown="if(event.key==='Enter') openXUserSearch();"
         style="flex:1; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
       <button onclick="openXUserSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:10px 14px;">X で検索 →</button>
-    </div>
-    <div style="margin-top:7px; font-size:11px; color:#666; line-height:1.7;">
-      💡 表示名・ニックネームで検索 → Xのユーザー一覧が<b style="color:#888;">別タブ</b>で開きます。<br>
-      　　本人を見つけたら <b style="color:#888;">@ID をコピー</b> して、下の from: 欄に貼り付けてください。
     </div>
   </div>
 
