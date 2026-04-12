@@ -612,6 +612,51 @@
     @media (max-width: 400px) {
       .date-row, .count-row { grid-template-columns: 1fr; }
     }
+    .nikkei-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nikkei-item {
+      display: flex;
+      align-items: flex-start;
+      background: rgba(0,0,0,0.35);
+      padding: 10px 12px;
+      border-radius: 8px;
+      gap: 10px;
+      transition: background 0.2s;
+    }
+
+    .nikkei-item:hover { background: rgba(0,0,0,0.55); }
+
+    .nikkei-date {
+      font-weight: 700;
+      color: #1d9bf0;
+      width: 110px;
+      flex-shrink: 0;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .nikkei-date.up { color: #00ba7c; }
+
+    .nikkei-body {
+      flex: 1;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #e7e9ea;
+    }
+
+    .nikkei-price { font-weight: 700; }
+
+    .nikkei-change { display: block; }
+
+    .nikkei-down { color: #f91880; font-weight: 700; }
+    .nikkei-up   { color: #00ba7c; font-weight: 700; }
+
+    .nikkei-note { color: #8899a6; display: block; }
   </style>
 </head>
 <body>
@@ -738,17 +783,74 @@
       <strong style="color:#e0e0e0;">その②　気になるあの人はあの時なにを！？</strong><br>
       あの頃〇〇さんは何をつぶやいてたのかしら！？見てみたい！→IDに見てみたい方のIDを入力し、気になる年月をセレクトして検索！こんなことをツイートしてたのね～つまり全Twitter民のブログ状態が読めます。最高か！<br>
       （検索結果の表示順：月末→月初の順に表示されます）<br><br>
-      <strong style="color:#e0b0ff;">例：</strong><span style="font-size:11px; color:#aaa;">※初ツイート探しの年月でセレクトして検索してください。</span><br>
-      2009年 3月（日経平均バブル後最安値7,054円の月）<br>
-      2012年 11月（アベノミクス始動の月）<br>
-      2013年 5月（5.23ショック日経平均1,143安の月）<br>
-      2015年 8月（チャイナショック暴落の月）<br>
-      2016年 6月（ブレグジットショック日経1,286円安の月）<br>
-      2020年 3月（コロナショック暴落の月）<br>
-      2024年 8月（日経平均下げ幅歴代1位 -4,451円安の月）<br>
-      2024年 8月（日経平均上げ幅歴代1位 +3,217円高の月）<br>
-      など<br><br>
-      ※残念ながらリーマンショックの2008年10月はTwitterがまだ日本で普及しておらず、当時のツイートはほぼ残っていません。
+      <strong style="color:#e0b0ff;">例：</strong><span style="font-size:11px; color:#aaa;">※初ツイート探しの年月でセレクトして検索してください。</span>
+      <div class="nikkei-list">
+        <div class="nikkei-item">
+          <span class="nikkei-date">2009年3月10日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】7,054.98円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-31.05円 / -0.44%</span>）</span>
+            <span class="nikkei-note">【解説】バブル後最安値。リーマンショック後の底打ち局面。ここから長期上昇トレンドへ。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date">2012年11月13日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】8,661.05円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-15.39円 / -0.18%</span>）</span>
+            <span class="nikkei-note">【解説】アベノミクス前夜。14日の野田首相の解散発言を機に大底から反転急上昇へ。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date">2013年5月1日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】13,799.35円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-61.51円 / -0.44%</span>）</span>
+            <span class="nikkei-note">【解説】5.23ショック。23日に大暴落（-1,143円）したが、それまでの急騰で結果的に月初が月間安値に。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date">2015年8月25日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】17,806.70円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-733.98円 / -3.96%</span>）</span>
+            <span class="nikkei-note">【解説】チャイナショック。中国株暴落が世界に波及し、連日の暴落でこの日が底に。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date">2016年6月24日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】14,952.02円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-1,286.33円 / -7.92%</span>）</span>
+            <span class="nikkei-note">【解説】ブレグジット。英国のEU離脱決定でパニック。この日がそのまま月間安値に。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date">2020年3月19日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】16,552.83円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-173.72円 / -1.04%</span>）</span>
+            <span class="nikkei-note">【解説】コロナショック。パンデミックの恐怖で連日急落。19日に大底を形成。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date">2024年8月5日</span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】31,458.42円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-down">-4,451.28円 / -12.40%</span>）</span>
+            <span class="nikkei-note">【解説】歴史的大乱高下。米リセッション懸念等で日経平均下げ幅歴代1位を記録。</span>
+          </div>
+        </div>
+        <div class="nikkei-item">
+          <span class="nikkei-date up">2024年8月6日<br><span style="font-size:0.8em;">歴代上昇幅1位</span></span>
+          <div class="nikkei-body">
+            <span class="nikkei-price">【終値】34,675.46円</span>
+            <span class="nikkei-change">（前日比 <span class="nikkei-up">+3,217.04円 / +10.23%</span>）</span>
+            <span class="nikkei-note">【解説】日経平均上げ幅歴代1位。前日の歴史的暴落から一転、買い戻しが殺到し過去最大の急騰。</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px; font-size:0.82rem; color:#aaa;">※残念ながらリーマンショックの2008年10月はTwitterがまだ日本で普及しておらず、当時のツイートはほぼ残っていません。</div>
     </div>
     <div style="text-align:right; margin-top:10px;">
       <button onclick="toggleTweetTips(); window.scrollTo({top:0, behavior:'smooth'});" style="-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:var(--radius); font-size:11px; font-weight:600; padding:4px 10px; cursor:pointer; transition:background 0.15s, color 0.15s, box-shadow 0.15s; -webkit-tap-highlight-color:transparent; outline:none;"
