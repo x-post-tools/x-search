@@ -947,6 +947,33 @@
     <button class="clear-btn" style="font-size:14px;" onclick="clearAll()">すべてリセット</button>
   </div>
 
+  <!-- 銘柄コード検索 -->
+  <div class="section" style="margin-bottom:8px;">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(251,191,36,0.15); color:#fbbf24; font-size:15px;">📈</div>
+      <span class="section-title">銘柄コード検索</span>
+      <button onclick="showToast('📈 銘柄コード検索の使い方\n\n証券コード（例: 9984）または\n銘柄名（例: ソフトバンク）を入力すると\n候補が表示されます。\n\n選択すると「コード 銘柄名」形式で\nXの検索に使えます。', 10000)" class="purple-btn" style="flex:0 0 auto; font-size:10px; padding:2px 8px;">使い方</button>
+      <button onclick="clearStockSearch()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">入力全クリア</button>
+    </div>
+    <div style="position:relative;">
+      <input type="text" id="stockSearchInput"
+        placeholder="例: 9984 または ソフトバンク"
+        oninput="onStockSearch(this.value)"
+        onkeydown="onStockKeydown(event)"
+        autocomplete="off"
+        style="width:100%; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
+      <div id="stock-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:#111; border:1px solid #333; border-radius:8px; z-index:200; max-height:220px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.6); margin-top:2px;"></div>
+    </div>
+    <div id="stock-result-area" style="display:none; margin-top:8px; gap:8px; flex-wrap:wrap; align-items:center;">
+      <input type="text" id="stockResult" readonly
+        style="flex:1; min-width:140px; background:#0d0d0d; border:1px solid #a855f7; border-radius:8px; color:#a855f7; font-size:14px; font-weight:700; padding:8px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
+      <button onclick="openXStockSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:9px 14px;">X で検索 →</button>
+      <button onclick="copyStockToKeyword()" class="purple-btn" style="flex:0 0 auto; font-size:11px; padding:9px 12px;">キーワードにコピー</button>
+    </div>
+  </div>
+
   <!-- ユーザーIDを探す（X検索連携） -->
   <div class="section" style="margin-bottom:8px;">
     <div class="section-header">
@@ -1445,6 +1472,100 @@
     toggleTweetTips();
     document.getElementById('firstYear').scrollIntoView({ behavior: 'smooth', block: 'center' });
     showToast(year + '年' + month + '月 をセットしました');
+  }
+
+  // ── 銘柄コード検索 ────────────────────────────
+  let stockData = [];
+  let selectedStock = null;
+  let stockFocusIndex = -1;
+
+  fetch('./stocks.json')
+    .then(r => r.json())
+    .then(data => { stockData = data; })
+    .catch(() => {});
+
+  function onStockSearch(val) {
+    val = val.trim();
+    selectedStock = null;
+    document.getElementById('stock-result-area').style.display = 'none';
+    stockFocusIndex = -1;
+    if (!val) { hideStockDropdown(); return; }
+    const valU = val.toUpperCase();
+    const matches = stockData.filter(s =>
+      s.code.toUpperCase().includes(valU) || s.name.includes(val)
+    ).slice(0, 12);
+    renderStockDropdown(matches);
+  }
+
+  function renderStockDropdown(matches) {
+    const dd = document.getElementById('stock-dropdown');
+    if (!matches.length) { dd.style.display = 'none'; return; }
+    dd.innerHTML = matches.map((s, i) =>
+      `<div data-idx="${i}" onclick="selectStock('${s.code.replace(/'/g,"\\'")}','${s.name.replace(/'/g,"\\'")}');hideStockDropdown();"
+        style="padding:9px 14px; cursor:pointer; border-bottom:1px solid #1a1a1a; font-size:13px; display:flex; gap:12px; align-items:center;"
+        onmouseover="this.style.background='#1e1e2e';" onmouseout="this.style.background='transparent';">
+        <span style="color:#a855f7; font-weight:700; min-width:38px; font-size:12px;">${s.code}</span>
+        <span style="color:#e0e0e0;">${s.name}</span>
+      </div>`
+    ).join('');
+    dd.style.display = 'block';
+  }
+
+  function hideStockDropdown() {
+    document.getElementById('stock-dropdown').style.display = 'none';
+  }
+
+  function selectStock(code, name) {
+    selectedStock = { code, name };
+    const display = code + ' ' + name;
+    document.getElementById('stockSearchInput').value = display;
+    document.getElementById('stockResult').value = display;
+    const area = document.getElementById('stock-result-area');
+    area.style.display = 'flex';
+  }
+
+  function onStockKeydown(e) {
+    const dd = document.getElementById('stock-dropdown');
+    const items = dd.querySelectorAll('[data-idx]');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      stockFocusIndex = Math.min(stockFocusIndex + 1, items.length - 1);
+      items.forEach((el, i) => el.style.background = i === stockFocusIndex ? '#1e1e2e' : 'transparent');
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      stockFocusIndex = Math.max(stockFocusIndex - 1, 0);
+      items.forEach((el, i) => el.style.background = i === stockFocusIndex ? '#1e1e2e' : 'transparent');
+    } else if (e.key === 'Enter' && stockFocusIndex >= 0) {
+      e.preventDefault();
+      items[stockFocusIndex].click();
+    } else if (e.key === 'Escape') {
+      hideStockDropdown();
+    }
+  }
+
+  function openXStockSearch() {
+    if (!selectedStock) return;
+    const q = selectedStock.code + ' ' + selectedStock.name;
+    const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+
+  function copyStockToKeyword() {
+    if (!selectedStock) return;
+    const q = selectedStock.code + ' ' + selectedStock.name;
+    document.getElementById('keyword').value = q;
+    updatePreview();
+    showToast('キーワード欄にコピーしました ✓');
+  }
+
+  function clearStockSearch() {
+    document.getElementById('stockSearchInput').value = '';
+    hideStockDropdown();
+    document.getElementById('stock-result-area').style.display = 'none';
+    selectedStock = null;
   }
 
   function openXUserSearch() {
