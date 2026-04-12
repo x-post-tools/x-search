@@ -1368,9 +1368,8 @@
     });
     document.getElementById('firstYear').value = new Date().getFullYear();
     document.getElementById('firstMonth').value = '1';
-    const now = new Date();
-    document.getElementById('since').value = '2017-01-01';
-    document.getElementById('until').value = now.toISOString().slice(0,10);
+    document.getElementById('since').value = '';
+    document.getElementById('until').value = '';
     updatePreview();
   }
 
@@ -1587,9 +1586,8 @@
     loadFromHistory();
     myidRender();
     buildYearSelect();
-    const _now = new Date();
-    if (!document.getElementById('since').value) document.getElementById('since').value = '2017-01-01';
-    if (!document.getElementById('until').value) document.getElementById('until').value = _now.toISOString().slice(0,10);
+    document.getElementById('since').value = '';
+    document.getElementById('until').value = '';
     updatePreview();
   });
 
