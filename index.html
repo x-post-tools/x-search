@@ -922,7 +922,7 @@
         placeholder="例: 9984 または ソフトバンク"
         oninput="onStockSearch(this.value)"
         onkeydown="onStockKeydown(event)"
-        autocomplete="off"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         style="width:100%; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
       <div id="stock-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:#111; border:1px solid #333; border-radius:8px; z-index:200; max-height:220px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.6); margin-top:2px;"></div>
     </div>
@@ -1631,8 +1631,9 @@
 
   function clearStockSearch() {
     document.getElementById('stockSearchInput').value = '';
+    document.getElementById('stockResult').value = '';
     hideStockDropdown();
-    document.getElementById('stock-result-area').style.display = 'none';
+    document.getElementById('stock-result-area').style.display = 'flex';
     selectedStock = null;
   }
 
