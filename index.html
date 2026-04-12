@@ -877,9 +877,9 @@
     <div style="font-size:15px; color:#e07000; font-weight:700; margin-bottom:8px; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">
       🕰 初ツイート探し（月単位で絞り込み）
       <button onclick="document.getElementById('firstYear').value=2017; document.getElementById('firstMonth').value=1; updatePreview();"
-        style="-webkit-appearance:none; background:transparent; border:1px solid #e07000; border-radius:6px; color:#e07000; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;"
-        onmouseover="this.style.background='rgba(224,112,0,0.15)'; this.style.color='#f08030'; this.style.borderColor='#f08030';"
-        onmouseout="this.style.background='transparent'; this.style.color='#e07000'; this.style.borderColor='#e07000';">クリア</button>
+        style="-webkit-appearance:none; background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">クリア</button>
     </div>
     <div style="font-size:11px; color:#cecece; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
       <span>💡 初登録年月はXプロフィール →「アカウントについて」で確認できます。自分の過去のブログとしても活用できます。<span onclick="toggleTweetTips(); this.closest('.section') && window.scrollTo({top:document.getElementById('tweet-tips-panel').getBoundingClientRect().top + window.scrollY - 60, behavior:'smooth'});" class="glow-text-orange" style="color:#dc3232; cursor:pointer; text-decoration:none; font-weight:700;" onmouseover="this.style.color='#ff5555';" onmouseout="this.style.color='#dc3232';">📖 使い方は必読！</span></span>
