@@ -951,7 +951,7 @@
       <div class="section-icon icon-blue" style="font-size:15px;">🔎</div>
       <span class="section-title">ユーザーを探す</span>
       <span style="font-size:11px; font-weight:600; color:var(--muted);">[ID調べツール]</span>
-      <button onclick="showToast('💡 表示名・ニックネームで検索\n→ Xのユーザー一覧が別タブで開きます。\n\n本人を見つけたら @ID をコピーして\n下の from: 欄に貼り付けてください。', 4000)" class="purple-btn" style="flex:0 0 auto; font-size:10px; padding:2px 8px;">使い方</button>
+      <button onclick="showToast('💡 表示名・ニックネームで検索\n→ Xのユーザー一覧が別タブで開きます。\n\n本人を見つけたら @ID をコピーして\n下の from: 欄に貼り付けてください。', 10000)" class="purple-btn" style="flex:0 0 auto; font-size:10px; padding:2px 8px;">使い方</button>
     </div>
     <div style="display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
@@ -1221,9 +1221,15 @@
     duration = duration || 2800;
     const toast = document.createElement('div');
     toast.textContent = msg;
-    toast.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(220,220,225,0.96); color:#111; font-size:13px; font-weight:600; padding:14px 22px; border-radius:14px; z-index:9999; text-align:center; max-width:300px; line-height:1.7; box-shadow:0 8px 32px rgba(0,0,0,0.45); border:none; white-space:pre-line;';
+    toast.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(220,220,225,0.96); color:#111; font-size:13px; font-weight:600; padding:14px 22px; border-radius:14px; z-index:9999; text-align:center; max-width:300px; line-height:1.7; box-shadow:0 8px 32px rgba(0,0,0,0.45); border:none; white-space:pre-line; cursor:pointer;';
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), duration);
+    let timer = setTimeout(() => { toast.remove(); document.removeEventListener('click', dismiss); }, duration);
+    function dismiss(e) {
+      clearTimeout(timer);
+      toast.remove();
+      document.removeEventListener('click', dismiss);
+    }
+    setTimeout(() => document.addEventListener('click', dismiss), 150);
   }
 
   // ── アクセスカウンター ────────────────────────────
