@@ -945,42 +945,26 @@
     <button class="clear-btn" style="font-size:14px;" onclick="clearAll()">すべてリセット</button>
   </div>
 
-  <!-- ユーザーIDクイック検索 -->
+  <!-- ユーザーIDを探す（X検索連携） -->
   <div class="section" style="margin-bottom:8px;">
     <div class="section-header">
       <div class="section-icon icon-blue" style="font-size:15px;">🔎</div>
-      <span class="section-title">ユーザーIDを検索</span>
-      <span style="font-size:11px; font-weight:600; color:var(--muted);">[ID転記ツール]</span>
+      <span class="section-title">ユーザーを探す</span>
+      <span style="font-size:11px; font-weight:600; color:var(--muted);">[ID調べツール]</span>
     </div>
     <div style="display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
-        placeholder="例: cadillac600（@なしでOK、途中でもOK）"
-        oninput="onUserSearch(this.value)"
+        placeholder="例: むらやん（表示名・ニックネームでOK）"
+        onkeydown="if(event.key==='Enter') openXUserSearch();"
         style="flex:1; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
-      <button onclick="clearUserSearch()"
-        style="-webkit-appearance:none; background:transparent; border:1px solid #444; border-radius:8px; color:#888; font-size:13px; font-weight:600; padding:10px 13px; cursor:pointer; white-space:nowrap; transition:color 0.15s, border-color 0.15s; flex-shrink:0;"
-        onmouseover="this.style.color='#f87171'; this.style.borderColor='#f87171';"
-        onmouseout="this.style.color='#888'; this.style.borderColor='#444';">✕</button>
+      <button onclick="openXUserSearch()"
+        style="-webkit-appearance:none; background:#1d9bf0; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:700; padding:10px 14px; cursor:pointer; white-space:nowrap; transition:background 0.15s; flex-shrink:0;"
+        onmouseover="this.style.background='#1a8cd8';"
+        onmouseout="this.style.background='#1d9bf0';">X で検索 →</button>
     </div>
-
-    <!-- 検索結果プレビュー -->
-    <div id="user-search-preview" style="display:none; margin-top:8px; padding:10px 12px; background:#0d0d0d; border:1px solid #333; border-radius:10px; align-items:center; gap:10px; flex-wrap:wrap;">
-      <img id="user-search-avatar" src="" alt=""
-        style="width:42px; height:42px; border-radius:50%; object-fit:cover; display:none; border:2px solid #444; flex-shrink:0;">
-      <div id="user-search-status" style="flex:1; min-width:120px; font-size:12px; line-height:1.6;"></div>
-      <div style="display:flex; gap:6px; flex-shrink:0; align-items:center; flex-wrap:wrap;">
-        <button id="user-search-from-btn" onclick="fillFromUser()"
-          style="display:none; -webkit-appearance:none; background:#a855f7; border:none; border-radius:6px; color:#fff; font-size:12px; font-weight:700; padding:6px 12px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
-          onmouseover="this.style.background='#9333ea';"
-          onmouseout="this.style.background='#a855f7';">from:に自動入力</button>
-        <a id="user-search-xlink" href="#" target="_blank" rel="noopener"
-          style="display:none; background:transparent; border:1px solid #555; border-radius:6px; color:#aaa; font-size:11px; font-weight:600; padding:5px 10px; text-decoration:none; text-align:center; white-space:nowrap; transition:color 0.15s, border-color 0.15s;"
-          onmouseover="this.style.color='#fff'; this.style.borderColor='#aaa';"
-          onmouseout="this.style.color='#aaa'; this.style.borderColor='#555';">Xで確認 →</a>
-      </div>
-    </div>
-    <div style="margin-top:6px; font-size:10px; color:#555; line-height:1.5;">
-      💡 IDを入力すると約0.7秒後にユーザーの存在を確認します。見つかったら from: 欄に1タップで転記できます。
+    <div style="margin-top:7px; font-size:11px; color:#666; line-height:1.7;">
+      💡 表示名・ニックネームで検索 → Xのユーザー一覧が<b style="color:#888;">別タブ</b>で開きます。<br>
+      　　本人を見つけたら <b style="color:#888;">@ID をコピー</b> して、下の from: 欄に貼り付けてください。
     </div>
   </div>
 
@@ -1441,65 +1425,12 @@
     });
   }
 
-  // ── ユーザーIDクイック検索 ────────────────────────────
-  let _userSearchTimer = null;
-  let _userSearchId = '';
-
-  function onUserSearch(raw) {
-    const id = raw.replace(/^[@＠]+/, '').replace(/\s/g, '');
-    _userSearchId = id;
-    const preview = document.getElementById('user-search-preview');
-    const avatar  = document.getElementById('user-search-avatar');
-    const status  = document.getElementById('user-search-status');
-    const fromBtn = document.getElementById('user-search-from-btn');
-    const xlink   = document.getElementById('user-search-xlink');
-    clearTimeout(_userSearchTimer);
-    if (!id || id.length < 2) {
-      preview.style.display = 'none';
-      return;
-    }
-    preview.style.display = 'flex';
-    avatar.style.display = 'none';
-    status.innerHTML = '<span style="color:#888;">🔍 確認中…</span>';
-    fromBtn.style.display = 'none';
-    xlink.style.display = 'none';
-    _userSearchTimer = setTimeout(() => {
-      if (id !== _userSearchId) return;
-      const img = new Image();
-      img.onload = () => {
-        if (id !== _userSearchId) return;
-        avatar.src = img.src;
-        avatar.style.display = 'block';
-        status.innerHTML = '<div style="color:#4ade80; font-weight:700;">✓ @' + id + '</div><div style="color:#888; font-size:11px;">ユーザーを確認できました</div>';
-        fromBtn.style.display = 'inline-block';
-        xlink.href = 'https://x.com/' + encodeURIComponent(id);
-        xlink.textContent = 'Xで確認 →';
-        xlink.style.display = 'inline-block';
-      };
-      img.onerror = () => {
-        if (id !== _userSearchId) return;
-        avatar.style.display = 'none';
-        status.innerHTML = '<div style="color:#f87171; font-weight:700;">✗ @' + id + '</div><div style="color:#888; font-size:11px;">ユーザーが見つかりません（または非公開）</div>';
-        fromBtn.style.display = 'none';
-        xlink.href = 'https://x.com/search?q=' + encodeURIComponent(id) + '&src=typed_query&f=user';
-        xlink.textContent = 'Xで検索 →';
-        xlink.style.display = 'inline-block';
-      };
-      img.src = 'https://unavatar.io/twitter/' + encodeURIComponent(id) + '?fallback=false';
-    }, 700);
-  }
-
-  function fillFromUser() {
-    if (!_userSearchId) return;
-    document.getElementById('fromUser').value = _userSearchId;
-    updatePreview();
-    showToast('✓ @' + _userSearchId + ' を from:欄に入力しました');
-  }
-
-  function clearUserSearch() {
-    document.getElementById('userSearchInput').value = '';
-    document.getElementById('user-search-preview').style.display = 'none';
-    _userSearchId = '';
+  // ── ユーザーIDを探す（X検索連携） ────────────────────────────
+  function openXUserSearch() {
+    const q = (document.getElementById('userSearchInput').value || '').trim();
+    if (!q) { showToast('検索する名前を入力してください'); return; }
+    const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&f=user&src=typed_query';
+    window.open(url, '_blank', 'noopener');
   }
 
   // ── リセット ──────────────────────────────────
