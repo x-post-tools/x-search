@@ -988,12 +988,19 @@
       <button onclick="clearUserSearchField()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
         onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
         onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">入力クリア</button>
+      <button onclick="clearUserSearchHistory()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">履歴削除</button>
     </div>
-    <div style="display:flex; gap:8px; align-items:center;">
+    <div style="position:relative; display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
         placeholder="例: cis（表示名・ニックネームでOK）"
-        onkeydown="if(event.key==='Enter') openXUserSearch();"
+        oninput="showUserSearchHistory(this.value)"
+        onfocus="showUserSearchHistory(this.value)"
+        onkeydown="if(event.key==='Enter'){ openXUserSearch(); } if(event.key==='Escape'){ hideUserSearchHistory(); }"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         style="flex:1; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
+      <div id="usersearch-history-list" style="display:none; position:absolute; top:100%; left:0; right:60px; background:#111; border:1px solid #333; border-radius:8px; z-index:200; max-height:200px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.6); margin-top:2px;"></div>
       <button onclick="openXUserSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:10px 14px;">X で検索 →</button>
     </div>
   </div>
@@ -1639,6 +1646,8 @@
   function openXUserSearch() {
     const q = (document.getElementById('userSearchInput').value || '').trim();
     if (!q) { showToast('検索する名前を入力してください'); return; }
+    saveUserSearchHistory(q);
+    hideUserSearchHistory();
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&f=user&src=typed_query';
     const a = document.createElement('a');
     a.href = url;
@@ -1657,9 +1666,64 @@
     updatePreview();
   }
 
+  // ── ユーザー検索 履歴オートコンプリート ────────────────────────────
+  const USERSEARCH_HISTORY_KEY = 'xsearch_usersearch_history';
+
+  function getUserSearchHistory() {
+    try { return JSON.parse(localStorage.getItem(USERSEARCH_HISTORY_KEY) || '[]'); } catch(e) { return []; }
+  }
+
+  function saveUserSearchHistory(q) {
+    if (!q || q.length < 1) return;
+    let list = getUserSearchHistory().filter(v => v !== q);
+    list.unshift(q);
+    list = list.slice(0, 15);
+    localStorage.setItem(USERSEARCH_HISTORY_KEY, JSON.stringify(list));
+  }
+
+  function showUserSearchHistory(val) {
+    const all = getUserSearchHistory();
+    const filtered = val ? all.filter(v => v.toLowerCase().includes(val.toLowerCase())) : all;
+    const list = document.getElementById('usersearch-history-list');
+    if (!filtered.length) { list.style.display = 'none'; return; }
+    list.innerHTML = filtered.map(v =>
+      `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; cursor:pointer; border-bottom:1px solid #1a1a1a; font-size:13px; color:#e0e0e0;"
+        onmouseover="this.style.background='#1e1e2e';" onmouseout="this.style.background='transparent';">
+        <span onclick="document.getElementById('userSearchInput').value='${v.replace(/'/g,"\\'")}'; hideUserSearchHistory();" style="flex:1;">${v}</span>
+        <span onclick="deleteOneUserSearchHistory('${v.replace(/'/g,"\\'")}');" style="color:#555; font-size:11px; padding:2px 6px; cursor:pointer;"
+          onmouseover="this.style.color='#f87171';" onmouseout="this.style.color='#555';">✕</span>
+      </div>`
+    ).join('');
+    list.style.display = 'block';
+  }
+
+  function hideUserSearchHistory() {
+    document.getElementById('usersearch-history-list').style.display = 'none';
+  }
+
+  function deleteOneUserSearchHistory(v) {
+    let list = getUserSearchHistory().filter(h => h !== v);
+    localStorage.setItem(USERSEARCH_HISTORY_KEY, JSON.stringify(list));
+    showUserSearchHistory(document.getElementById('userSearchInput').value);
+  }
+
+  function clearUserSearchHistory() {
+    localStorage.removeItem(USERSEARCH_HISTORY_KEY);
+    hideUserSearchHistory();
+    showToast('検索履歴を削除しました');
+  }
+
   function clearUserSearchField() {
     document.getElementById('userSearchInput').value = '';
+    hideUserSearchHistory();
   }
+
+  document.addEventListener('click', function(e) {
+    if (!document.getElementById('userSearchInput').contains(e.target) &&
+        !document.getElementById('usersearch-history-list').contains(e.target)) {
+      hideUserSearchHistory();
+    }
+  });
 
   function clearDateFields() {
     ['since','until'].forEach(id => {
