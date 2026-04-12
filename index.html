@@ -1080,6 +1080,9 @@
       <div class="section-icon icon-orange">❤️</div>
       <span class="section-title">反響で絞り込む</span>
       <span style="font-size:12px; font-weight:600; color:var(--muted);">[通常条件検索]</span>
+      <button onclick="clearEngagementFields()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">入力全クリア</button>
     </div>
     <div class="field-group">
       <div class="count-row">
@@ -1102,6 +1105,9 @@
       <div class="section-icon icon-pink">🎬</div>
       <span class="section-title">メディア・リンク</span>
       <span style="font-size:12px; font-weight:600; color:var(--muted);">[通常条件検索]</span>
+      <button onclick="clearMediaFields()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">入力全クリア</button>
     </div>
     <div class="toggle-group">
       <button class="toggle-btn" id="btn-images" onclick="toggleFilter('images')">🖼 画像</button>
@@ -1443,6 +1449,21 @@
   function clearKeywordFields() {
     ['keyword','exact','exclude','orA','orB'].forEach(id => {
       document.getElementById(id).value = '';
+    });
+    updatePreview();
+  }
+
+  function clearEngagementFields() {
+    ['minFaves','minRetweets'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    updatePreview();
+  }
+
+  function clearMediaFields() {
+    ['images','videos','links'].forEach(k => {
+      filters[k] = false;
+      document.getElementById('btn-' + k).classList.remove('active');
     });
     updatePreview();
   }
