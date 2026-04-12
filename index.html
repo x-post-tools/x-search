@@ -950,8 +950,10 @@
     <div class="section-header">
       <div class="section-icon icon-blue" style="font-size:15px;">🔎</div>
       <span class="section-title">ユーザーを探す</span>
-      <span style="font-size:11px; font-weight:600; color:var(--muted);">[ID調べツール]</span>
       <button onclick="showToast('💡 表示名・ニックネームで検索\n→ Xのユーザー一覧が別タブで開きます。\n\n本人を見つけたら @ID をコピーして\n下の from: 欄に貼り付けてください。', 10000)" class="purple-btn" style="flex:0 0 auto; font-size:10px; padding:2px 8px;">使い方</button>
+      <button onclick="clearUserSearchField()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; transition:all 0.15s;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">入力全クリア</button>
     </div>
     <div style="display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
@@ -1454,6 +1456,10 @@
       document.getElementById(id).value = '';
     });
     updatePreview();
+  }
+
+  function clearUserSearchField() {
+    document.getElementById('userSearchInput').value = '';
   }
 
   function clearDateFields() {
