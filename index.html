@@ -670,6 +670,17 @@
   <button onclick="showAddToHome()" style="margin-left:auto; background:transparent; border:1px solid #444; border-radius:6px; color:#666; font-size:10px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; -webkit-appearance:none; appearance:none;">📲 ホーム画面に追加</button>
 </header>
 
+<!-- 年一覧ポップアップ -->
+<div id="year-picker-popup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; padding:20px;" onclick="if(event.target===this)this.style.display='none';">
+  <div style="background:#1e1e1e; border:1px solid #a855f7; border-radius:16px; padding:20px; max-width:320px; width:100%;">
+    <div style="font-size:13px; font-weight:700; color:#a855f7; margin-bottom:14px; text-align:center;" id="year-picker-label">年を選択</div>
+    <div id="year-picker-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button onclick="document.getElementById('year-picker-popup').style.display='none';" style="-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:8px; font-size:13px; font-weight:600; padding:6px 20px; cursor:pointer;">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <!-- ホーム画面に追加 案内ポップアップ -->
 <div id="add-to-home-popup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; padding:20px;">
   <div style="background:#1e1e1e; border:1px solid #a855f7; border-radius:16px; padding:24px; max-width:320px; width:100%; text-align:center;">
@@ -1027,11 +1038,17 @@
       <div class="date-row">
         <div class="field">
           <label>以降 (since:)</label>
-          <input type="date" id="since" oninput="updatePreview()">
+          <div style="display:flex; gap:6px; align-items:center;">
+            <input type="date" id="since" oninput="updatePreview()" style="flex:1;">
+            <button onclick="showYearPicker('since')" style="-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:6px; font-size:11px; font-weight:600; padding:6px 10px; cursor:pointer; white-space:nowrap;">年一覧</button>
+          </div>
         </div>
         <div class="field">
           <label>以前 (until:)</label>
-          <input type="date" id="until" oninput="updatePreview()">
+          <div style="display:flex; gap:6px; align-items:center;">
+            <input type="date" id="until" oninput="updatePreview()" style="flex:1;">
+            <button onclick="showYearPicker('until')" style="-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:6px; font-size:11px; font-weight:600; padding:6px 10px; cursor:pointer; white-space:nowrap;">年一覧</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1179,6 +1196,39 @@
     setTimeout(() => toast.remove(), 3500);
   }
 
+  // ── 年一覧ピッカー ───────────────────────────────
+  let yearPickerTarget = null;
+
+  function showYearPicker(targetId) {
+    yearPickerTarget = targetId;
+    const label = document.getElementById('year-picker-label');
+    label.textContent = targetId === 'since' ? '以降：年を選択' : '以前：年を選択';
+    const grid = document.getElementById('year-picker-grid');
+    const currentYear = new Date().getFullYear();
+    grid.innerHTML = '';
+    for (let y = 2008; y <= currentYear; y++) {
+      const btn = document.createElement('button');
+      btn.textContent = y;
+      btn.style.cssText = '-webkit-appearance:none; appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:8px; font-size:14px; font-weight:600; padding:10px 4px; cursor:pointer; width:100%;';
+      btn.onmouseover = () => { btn.style.background='rgba(168,85,247,0.2)'; };
+      btn.onmouseout = () => { btn.style.background='transparent'; };
+      btn.onclick = () => pickYear(y);
+      grid.appendChild(btn);
+    }
+    document.getElementById('year-picker-popup').style.display = 'flex';
+  }
+
+  function pickYear(year) {
+    const input = document.getElementById(yearPickerTarget);
+    if (yearPickerTarget === 'since') {
+      input.value = year + '-01-01';
+    } else {
+      input.value = year + '-12-31';
+    }
+    updatePreview();
+    document.getElementById('year-picker-popup').style.display = 'none';
+  }
+
   // ── ホーム画面に追加 案内 ────────────────────────
   function showAddToHome() {
     const popup = document.getElementById('add-to-home-popup');
@@ -1318,6 +1368,9 @@
     });
     document.getElementById('firstYear').value = new Date().getFullYear();
     document.getElementById('firstMonth').value = '1';
+    const now = new Date();
+    document.getElementById('since').value = '2017-01-01';
+    document.getElementById('until').value = now.toISOString().slice(0,10);
     updatePreview();
   }
 
@@ -1534,6 +1587,9 @@
     loadFromHistory();
     myidRender();
     buildYearSelect();
+    const _now = new Date();
+    if (!document.getElementById('since').value) document.getElementById('since').value = '2017-01-01';
+    if (!document.getElementById('until').value) document.getElementById('until').value = _now.toISOString().slice(0,10);
     updatePreview();
   });
 
