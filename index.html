@@ -662,7 +662,7 @@
 <body>
 
 <header>
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="white" onclick="adminTap()" style="cursor:pointer; -webkit-tap-highlight-color:transparent;">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.843L1.254 2.25H8.08l4.253 5.622 5.912-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
   </svg>
   <h1><a href="https://x-post-tools.github.io/x-search/" style="color:inherit; text-decoration:none;">高度検索ツール</a></h1>
@@ -1194,6 +1194,36 @@
     toast.style.cssText = 'position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#333; color:#fff; font-size:12px; padding:10px 16px; border-radius:10px; z-index:9999; text-align:center; max-width:280px; line-height:1.6; box-shadow:0 4px 16px rgba(0,0,0,0.5);';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
+  }
+
+  // ── アクセスカウンター ────────────────────────────
+  const COUNTER_URL = 'https://api.counterapi.dev/v1/x-post-tools/xsearch';
+  // ページ読み込み時にカウントアップ
+  fetch(COUNTER_URL + '/up').catch(() => {});
+
+  let _adminTaps = 0, _adminTimer = null;
+  function adminTap() {
+    _adminTaps++;
+    clearTimeout(_adminTimer);
+    if (_adminTaps >= 5) {
+      _adminTaps = 0;
+      fetch(COUNTER_URL + '/get')
+        .then(r => r.json())
+        .then(d => {
+          const popup = document.createElement('div');
+          popup.innerHTML = `
+            <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#1e1e1e; border:1px solid #a855f7; border-radius:16px; padding:24px 32px; z-index:99999; text-align:center; min-width:200px; box-shadow:0 8px 32px rgba(0,0,0,0.8);">
+              <div style="font-size:13px; color:#a855f7; font-weight:700; margin-bottom:8px;">📊 管理者ビュー</div>
+              <div style="font-size:36px; font-weight:700; color:#fff; margin-bottom:4px;">${d.count ?? '?'}</div>
+              <div style="font-size:12px; color:#888; margin-bottom:16px;">トータルアクセス</div>
+              <button onclick="this.closest('div').parentNode.remove()" style="-webkit-appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:8px; font-size:13px; padding:6px 20px; cursor:pointer;">閉じる</button>
+            </div>`;
+          document.body.appendChild(popup);
+        })
+        .catch(() => alert('カウンター取得失敗'));
+    } else {
+      _adminTimer = setTimeout(() => { _adminTaps = 0; }, 2000);
+    }
   }
 
   // ── 年一覧ピッカー ───────────────────────────────
