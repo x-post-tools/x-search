@@ -608,6 +608,7 @@
 
     input::placeholder { color: #71767b; }
     select::placeholder { color: #71767b; }
+    #stockResult::placeholder { font-size: 0.75em; font-weight: normal; color: #555; }
 
     @media (max-width: 400px) {
       .date-row, .count-row { grid-template-columns: 1fr; }
@@ -689,6 +690,7 @@
   <div style="background:#1e1e1e; border:1px solid #e07000; border-radius:16px; padding:24px; max-width:320px; width:100%; text-align:center;">
     <div style="font-size:15px; font-weight:700; color:#e0e0e0; margin-bottom:16px;">ホーム画面に追加する方法</div>
     <div style="font-size:13px; color:#bbb; line-height:2; text-align:left; margin-bottom:20px;">
+      <strong style="color:#ccc;">iPhone・Android</strong><br>
       <strong style="color:#ccc;">Safari・Chrome 共通：</strong><br>
       アドレスバー右横の
       <span style="display:inline-flex; align-items:center; gap:3px; background:#333; border-radius:5px; padding:2px 7px; vertical-align:middle;">
@@ -701,7 +703,7 @@
       </span>
       をタップ<br>
       →「<strong style="color:#fff;">ホーム画面に追加</strong>」を選択<br>
-      →スマホ画面に表示されます。
+      →スマートフォンの画面にアプリアイコンのように表示されてショートカットが作られます。
     </div>
     <button onclick="document.getElementById('add-to-home-popup').style.display='none';" style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:8px; font-size:14px; font-weight:600; padding:8px 24px; cursor:pointer;">閉じる</button>
   </div>
@@ -929,7 +931,8 @@
     </div>
     <div id="stock-result-area" style="display:flex; margin-top:8px; gap:8px; flex-wrap:wrap; align-items:center;">
       <input type="text" id="stockResult" readonly
-        style="flex:1; min-width:140px; background:#0d0d0d; border:1px solid #e07000; border-radius:8px; color:#e07000; font-size:14px; font-weight:700; padding:8px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
+        placeholder="銘柄名・コードがここに表示されます"
+        style="flex:1; min-width:140px; background:#0d0d0d; border:1px solid #e07000; border-radius:8px; color:#e07000; font-size:16px; font-weight:700; padding:8px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
       <button onclick="openXStockSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:9px 14px;">X で検索 →</button>
       <button onclick="copyStockToKeyword()" class="purple-btn" style="flex:0 0 auto; font-size:11px; padding:9px 12px;">キーワードにコピー</button>
     </div>
