@@ -954,13 +954,10 @@
     </div>
     <div style="display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
-        placeholder="例: むらやん（表示名・ニックネームでOK）"
+        placeholder="例: cis（表示名・ニックネームでOK）"
         onkeydown="if(event.key==='Enter') openXUserSearch();"
         style="flex:1; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
-      <button onclick="openXUserSearch()"
-        style="-webkit-appearance:none; background:#1d9bf0; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:700; padding:10px 14px; cursor:pointer; white-space:nowrap; transition:background 0.15s; flex-shrink:0;"
-        onmouseover="this.style.background='#1a8cd8';"
-        onmouseout="this.style.background='#1d9bf0';">X で検索 →</button>
+      <button onclick="openXUserSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:10px 14px;">X で検索 →</button>
     </div>
     <div style="margin-top:7px; font-size:11px; color:#666; line-height:1.7;">
       💡 表示名・ニックネームで検索 → Xのユーザー一覧が<b style="color:#888;">別タブ</b>で開きます。<br>
@@ -1430,7 +1427,13 @@
     const q = (document.getElementById('userSearchInput').value || '').trim();
     if (!q) { showToast('検索する名前を入力してください'); return; }
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&f=user&src=typed_query';
-    window.open(url, '_blank', 'noopener');
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   // ── リセット ──────────────────────────────────
