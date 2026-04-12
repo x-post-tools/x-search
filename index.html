@@ -1207,20 +1207,22 @@
     clearTimeout(_adminTimer);
     if (_adminTaps >= 5) {
       _adminTaps = 0;
-      fetch(COUNTER_URL + '/get')
+      fetch(COUNTER_URL + '/up')
         .then(r => r.json())
         .then(d => {
+          const count = d.count ?? d.value ?? d.hits ?? d.Count ?? Object.values(d).find(v => typeof v === 'number') ?? '?';
           const popup = document.createElement('div');
           popup.innerHTML = `
             <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#1e1e1e; border:1px solid #a855f7; border-radius:16px; padding:24px 32px; z-index:99999; text-align:center; min-width:200px; box-shadow:0 8px 32px rgba(0,0,0,0.8);">
               <div style="font-size:13px; color:#a855f7; font-weight:700; margin-bottom:8px;">📊 管理者ビュー</div>
-              <div style="font-size:36px; font-weight:700; color:#fff; margin-bottom:4px;">${d.count ?? '?'}</div>
-              <div style="font-size:12px; color:#888; margin-bottom:16px;">トータルアクセス</div>
+              <div style="font-size:36px; font-weight:700; color:#fff; margin-bottom:4px;">${count}</div>
+              <div style="font-size:12px; color:#888; margin-bottom:4px;">トータルアクセス</div>
+              <div style="font-size:10px; color:#555; margin-bottom:16px;">${JSON.stringify(d)}</div>
               <button onclick="this.closest('div').parentNode.remove()" style="-webkit-appearance:none; background:transparent; color:#a855f7; border:1px solid #a855f7; border-radius:8px; font-size:13px; padding:6px 20px; cursor:pointer;">閉じる</button>
             </div>`;
           document.body.appendChild(popup);
         })
-        .catch(() => alert('カウンター取得失敗'));
+        .catch(e => alert('カウンター取得失敗: ' + e.message));
     } else {
       _adminTimer = setTimeout(() => { _adminTaps = 0; }, 2000);
     }
