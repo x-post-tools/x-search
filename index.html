@@ -413,6 +413,10 @@
       cursor: pointer;
       transition: background 0.15s, color 0.15s, box-shadow 0.15s;
       white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .purple-btn:hover { background: rgba(224,112,0,0.15); border-color: #f08030; color: #f08030; box-shadow: 0 0 8px rgba(224,112,0,0.4); }
     .purple-btn:active { background: rgba(224,112,0,0.3); box-shadow: 0 0 18px rgba(224,112,0,0.8), 0 0 40px rgba(224,112,0,0.4); border-color: #e0a0ff; color: #f0c0ff; }
@@ -768,7 +772,7 @@
 
   <!-- ユーザー過去ツイート機能 -->
   <div class="btn-row" style="margin-bottom:8px;">
-    <button class="purple-btn" id="topSearchBtn" style="font-size:13px;" onclick="doSearch()">🔍 高度条件検索</button>
+    <a class="purple-btn" id="topSearchBtn" href="#" target="_blank" rel="noopener noreferrer" style="font-size:13px;" onclick="return onSearchClick(event)">🔍 高度条件検索</a>
     <button class="purple-btn" style="font-size:13px;" onclick="randomTweet()">🎲 ランダム検索</button>
     <button class="purple-btn" style="font-size:13px; color:#e07000; border-color:#e07000;" onclick="toggleTweetTips()">📖 使い方</button>
   </div>
@@ -933,7 +937,7 @@
       <input type="text" id="stockResult" readonly
         placeholder="銘柄名・コードがここに表示されます"
         style="flex:1; min-width:140px; background:#0d0d0d; border:1px solid #e07000; border-radius:8px; color:#e07000; font-size:16px; font-weight:700; padding:8px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
-      <button onclick="openXStockSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:9px 14px;">X で検索 →</button>
+      <a id="stockSearchBtn" href="#" target="_blank" rel="noopener noreferrer" onclick="return onStockSearchClick(event)" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:9px 14px;">X で検索 →</a>
       <button onclick="copyStockToKeyword()" class="purple-btn" style="flex:0 0 auto; font-size:11px; padding:9px 12px;">キーワードにコピー</button>
     </div>
   </div>
@@ -980,7 +984,7 @@
 
   <!-- ショートカットボタン（ユーザー直上） -->
   <div class="btn-row" style="margin-bottom:8px;">
-    <button class="purple-btn" id="midSearchBtn" style="font-size:14px;" onclick="doSearch()">🔍 通常検索する</button>
+    <a class="purple-btn" id="midSearchBtn" href="#" target="_blank" rel="noopener noreferrer" style="font-size:14px;" onclick="return onSearchClick(event)">🔍 通常検索する</a>
     <button class="clear-btn" style="font-size:14px;" onclick="clearAll()">すべてリセット</button>
   </div>
 
@@ -1000,13 +1004,13 @@
     <div style="position:relative; display:flex; gap:8px; align-items:center;">
       <input type="text" id="userSearchInput"
         placeholder="例: cis（表示名・ニックネームでOK）"
-        oninput="showUserSearchHistory(this.value)"
+        oninput="showUserSearchHistory(this.value); (function(v){ const btn=document.getElementById('userSearchBtn'); if(btn) btn.href = v.trim() ? 'https://x.com/search?q='+encodeURIComponent(v.trim())+'&f=user&src=typed_query' : '#'; })(this.value)"
         onfocus="showUserSearchHistory(this.value)"
         onkeydown="if(event.key==='Enter'){ openXUserSearch(); } if(event.key==='Escape'){ hideUserSearchHistory(); }"
         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         style="flex:1; background:#0d0d0d; border:1px solid #333; border-radius:8px; color:#fff; font-size:16px; padding:10px 12px; outline:none; -webkit-appearance:none; box-sizing:border-box;">
       <div id="usersearch-history-list" style="display:none; position:absolute; top:100%; left:0; right:60px; background:#111; border:1px solid #333; border-radius:8px; z-index:200; max-height:200px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.6); margin-top:2px;"></div>
-      <button onclick="openXUserSearch()" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:10px 14px;">X で検索 →</button>
+      <a id="userSearchBtn" href="#" target="_blank" rel="noopener noreferrer" onclick="return onUserSearchClick(event)" class="purple-btn" style="flex:0 0 auto; font-size:13px; padding:10px 14px;">X で検索 →</a>
     </div>
   </div>
 
@@ -1181,9 +1185,9 @@
   </div>
 
   <!-- ボタン -->
-  <button class="purple-btn search-bottom-btn" id="searchBtn" onclick="doSearch()">
+  <a class="purple-btn search-bottom-btn" id="searchBtn" href="#" target="_blank" rel="noopener noreferrer" onclick="return onSearchClick(event)">
     🔍 X高度条件検索する
-  </button>
+  </a>
 
   <div class="btn-row">
     <button class="clear-btn" onclick="clearAll()">すべてリセット</button>
@@ -1445,6 +1449,7 @@
     const btn = document.getElementById('searchBtn');
     const topBtn = document.getElementById('topSearchBtn');
     const midBtn = document.getElementById('midSearchBtn');
+    const searchUrl = q ? 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query' : '#';
     if (q) {
       el.textContent = q;
       el.classList.remove('empty');
@@ -1458,23 +1463,43 @@
       if (topBtn) topBtn.classList.remove('has-query');
       if (midBtn) midBtn.classList.remove('has-query');
     }
+    [btn, topBtn, midBtn].forEach(b => { if (b) b.href = searchUrl; });
     saveState();
   }
 
   // ── 検索実行 ──────────────────────────────────
+  function onSearchClick(e) {
+    const q = buildQuery();
+    if (!q) {
+      e.preventDefault();
+      showToast('検索条件が入力されていません。\nキーワードやIDなど何か入力してください。');
+      return false;
+    }
+    saveFromHistory(document.getElementById('fromUser').value.trim().replace(/^@/, ''));
+    return true;
+  }
+
+  function onStockSearchClick(e) {
+    if (!selectedStock) { e.preventDefault(); return false; }
+    return true;
+  }
+
+  function onUserSearchClick(e) {
+    const q = (document.getElementById('userSearchInput').value || '').trim();
+    if (!q) { e.preventDefault(); showToast('検索する名前を入力してください'); return false; }
+    saveUserSearchHistory(q);
+    hideUserSearchHistory();
+    return true;
+  }
+
   function doSearch() {
     const q = buildQuery();
     if (!q) { showToast('検索条件が入力されていません。\nキーワードやIDなど何か入力してください。'); return; }
     saveFromHistory(document.getElementById('fromUser').value.trim().replace(/^@/, ''));
     const url = 'https://x.com/search?q=' + encodeURIComponent(q) + '&src=typed_query';
-    // アンカークリック方式：window.open より履歴に余分なページが残らない
     const a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 
   // ── コピー ────────────────────────────────────
@@ -1614,6 +1639,8 @@
     document.getElementById('stockResult').value = display;
     const area = document.getElementById('stock-result-area');
     area.style.display = 'flex';
+    const btn = document.getElementById('stockSearchBtn');
+    if (btn) btn.href = 'https://x.com/search?q=' + encodeURIComponent(display) + '&src=typed_query';
   }
 
   function onStockKeydown(e) {
