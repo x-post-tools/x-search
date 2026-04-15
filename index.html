@@ -1760,7 +1760,7 @@
     const kb = document.getElementById('kabutanBtn');
     if (kb) kb.href = 'https://kabutan.jp/stock/?code=' + encodeURIComponent(code);
     const yb = document.getElementById('yahoobbsBtn');
-    if (yb) yb.href = 'https://finance.yahoo.co.jp/cm/message/100' + encodeURIComponent(code) + '/';
+    if (yb) yb.href = 'https://finance.yahoo.co.jp/quote/' + encodeURIComponent(code) + '.T/forum';
   }
 
   function onStockKeydown(e) {
