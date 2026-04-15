@@ -940,19 +940,18 @@
   <div class="section" style="margin-bottom:8px;">
     <div class="section-header" style="gap:6px; flex-wrap:nowrap;">
       <div class="section-icon icon-green" style="flex-shrink:0;">📅</div>
-      <span class="section-title" style="white-space:nowrap; flex-shrink:0;">年月日期間指定</span>
+      <span class="section-title" style="white-space:nowrap; flex-shrink:0;">年月日指定</span>
+      <button id="dp-since-btn" onclick="showDatePicker('since')"
+        style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:6px; font-size:11px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:background 0.15s;"
+        onmouseover="this.style.background='rgba(224,112,0,0.12)';" onmouseout="this.style.background='transparent';">📅 開始日</button>
+      <span style="color:#e7e9ea; font-size:12px; flex-shrink:0;">〜</span>
+      <button id="dp-until-btn" onclick="showDatePicker('until')"
+        style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:6px; font-size:11px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:background 0.15s;"
+        onmouseover="this.style.background='rgba(224,112,0,0.12)';" onmouseout="this.style.background='transparent';">📅 終了日</button>
+      <div style="flex:1;"></div>
       <button onclick="clearDatePicker()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s;"
         onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
         onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">クリア</button>
-      <div style="display:flex; align-items:center; gap:5px; flex:1; min-width:0; justify-content:flex-end;">
-        <button id="dp-since-btn" onclick="showDatePicker('since')"
-          style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:6px; font-size:11px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
-          onmouseover="this.style.background='rgba(224,112,0,0.12)';" onmouseout="this.style.background='transparent';">📅 開始日</button>
-        <span style="color:#555; font-size:12px; flex-shrink:0;">〜</span>
-        <button id="dp-until-btn" onclick="showDatePicker('until')"
-          style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:6px; font-size:11px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
-          onmouseover="this.style.background='rgba(224,112,0,0.12)';" onmouseout="this.style.background='transparent';">📅 終了日</button>
-      </div>
     </div>
   </div>
 
