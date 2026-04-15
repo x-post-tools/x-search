@@ -366,13 +366,11 @@
       transition: all 0.15s;
     }
 
-    @media (hover: hover) {
-      .clear-btn:hover {
-        background: rgba(255,50,50,0.1);
-        border-color: var(--danger);
-        color: var(--danger);
-        box-shadow: 0 0 8px rgba(255,50,50,0.25);
-      }
+    .clear-btn:hover {
+      background: rgba(255,50,50,0.1);
+      border-color: var(--danger);
+      color: var(--danger);
+      box-shadow: 0 0 8px rgba(255,50,50,0.25);
     }
     .clear-btn:active {
       background: rgba(255,50,50,0.2);
@@ -1881,18 +1879,6 @@
       hideUserSearchHistory();
     }
   });
-
-  // スマホのhover残り問題：touchendで200ms後にインラインhoverスタイルをリセット
-  document.addEventListener('touchend', function(e) {
-    const btn = e.target.closest('button, a');
-    if (!btn) return;
-    setTimeout(() => {
-      btn.style.color = '';
-      btn.style.background = '';
-      btn.style.borderColor = '';
-      btn.style.boxShadow = '';
-    }, 200);
-  }, { passive: true });
 
   function clearDateFields() {
     ['since','until'].forEach(id => {
