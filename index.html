@@ -689,6 +689,28 @@
   </div>
 </div>
 
+<!-- 📅 日付ピッカーポップアップ -->
+<div id="date-picker-popup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; padding:20px;" onclick="if(event.target===this)closeDatePicker();">
+  <div style="background:#1e1e1e; border:1px solid #e07000; border-radius:16px; padding:22px 20px; max-width:300px; width:100%;">
+    <div id="dp-title" style="font-size:14px; font-weight:700; color:#e07000; margin-bottom:18px; text-align:center;"></div>
+    <div style="display:flex; gap:8px; margin-bottom:18px;">
+      <select id="dp-year" style="flex:2; background:#0d0d0d; border:1px solid #444; border-radius:8px; color:#fff; font-size:14px; padding:8px 4px; outline:none; -webkit-appearance:none; appearance:none; text-align:center;"></select>
+      <select id="dp-month" style="flex:1; background:#0d0d0d; border:1px solid #444; border-radius:8px; color:#fff; font-size:14px; padding:8px 4px; outline:none; -webkit-appearance:none; appearance:none; text-align:center;">
+        <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+        <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+        <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+        <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+      </select>
+      <select id="dp-day" style="flex:1; background:#0d0d0d; border:1px solid #444; border-radius:8px; color:#fff; font-size:14px; padding:8px 4px; outline:none; -webkit-appearance:none; appearance:none; text-align:center;">
+      </select>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="confirmDatePicker()" style="-webkit-appearance:none; appearance:none; flex:1; background:#e07000; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; padding:10px; cursor:pointer;">確定</button>
+      <button onclick="closeDatePicker()" style="-webkit-appearance:none; appearance:none; flex:1; background:transparent; color:#888; border:1px solid #444; border-radius:8px; font-size:14px; font-weight:600; padding:10px; cursor:pointer;">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <!-- ホーム画面に追加 案内ポップアップ -->
 <div id="add-to-home-popup" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; padding:20px;">
   <div style="background:#1e1e1e; border:1px solid #e07000; border-radius:16px; padding:24px; max-width:320px; width:100%; text-align:center;">
@@ -911,6 +933,26 @@
       <button class="purple-btn" style="font-size:13px; padding:9px 6px;" onclick="firstTweetNav(-1)">← 前の月</button>
       <button class="purple-btn" style="font-size:13px; padding:9px 6px; flex:2;" onclick="firstTweetSearch()">🔍 この月を検索</button>
       <button class="purple-btn" style="font-size:13px; padding:9px 6px;" onclick="firstTweetNav(1)">次の月 →</button>
+    </div>
+  </div>
+
+  <!-- 📅 年月日期間指定（クイック） -->
+  <div class="section" style="margin-bottom:8px;">
+    <div class="section-header" style="gap:6px; flex-wrap:nowrap;">
+      <div class="section-icon icon-green" style="flex-shrink:0;">📅</div>
+      <span class="section-title" style="white-space:nowrap; flex-shrink:0;">年月日期間指定</span>
+      <button onclick="clearDatePicker()" style="background:transparent; color:var(--muted); border:1px solid var(--danger); border-radius:6px; font-size:10px; font-weight:600; padding:2px 8px; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s;"
+        onmouseover="this.style.color='var(--danger)'; this.style.background='rgba(255,50,50,0.1)';"
+        onmouseout="this.style.color='var(--muted)'; this.style.background='transparent';">クリア</button>
+      <div style="display:flex; align-items:center; gap:5px; flex:1; min-width:0; justify-content:flex-end;">
+        <button id="dp-since-btn" onclick="showDatePicker('since')"
+          style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:6px; font-size:11px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
+          onmouseover="this.style.background='rgba(224,112,0,0.12)';" onmouseout="this.style.background='transparent';">📅 開始日</button>
+        <span style="color:#555; font-size:12px; flex-shrink:0;">〜</span>
+        <button id="dp-until-btn" onclick="showDatePicker('until')"
+          style="-webkit-appearance:none; appearance:none; background:transparent; color:#e07000; border:1px solid #e07000; border-radius:6px; font-size:11px; font-weight:600; padding:4px 8px; cursor:pointer; white-space:nowrap; transition:background 0.15s;"
+          onmouseover="this.style.background='rgba(224,112,0,0.12)';" onmouseout="this.style.background='transparent';">📅 終了日</button>
+      </div>
     </div>
   </div>
 
@@ -1325,6 +1367,75 @@
     }
   }
 
+  // ── 📅 日付ピッカー ────────────────────────────────
+  let datePickerTarget = null;
+
+  function showDatePicker(targetId) {
+    datePickerTarget = targetId;
+    document.getElementById('dp-title').textContent =
+      targetId === 'since' ? '📅 開始日 (since:) を選択' : '📅 終了日 (until:) を選択';
+    // 年セレクト生成
+    const yearSel = document.getElementById('dp-year');
+    const currentYear = new Date().getFullYear();
+    yearSel.innerHTML = '';
+    for (let y = 2006; y <= currentYear; y++) {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y + '年';
+      yearSel.appendChild(opt);
+    }
+    // 日セレクト生成
+    const daySel = document.getElementById('dp-day');
+    daySel.innerHTML = '';
+    for (let d = 1; d <= 31; d++) {
+      const opt = document.createElement('option');
+      opt.value = d; opt.textContent = d + '日';
+      daySel.appendChild(opt);
+    }
+    // 既存値があれば反映
+    const existing = document.getElementById(targetId).value;
+    if (existing) {
+      const parts = existing.split('-');
+      yearSel.value = parseInt(parts[0]);
+      document.getElementById('dp-month').value = parseInt(parts[1]);
+      daySel.value = parseInt(parts[2]);
+    } else {
+      yearSel.value = currentYear;
+      document.getElementById('dp-month').value = targetId === 'since' ? 1 : 12;
+      daySel.value = targetId === 'since' ? 1 : 31;
+    }
+    document.getElementById('date-picker-popup').style.display = 'flex';
+  }
+
+  function confirmDatePicker() {
+    const y = document.getElementById('dp-year').value;
+    const m = String(document.getElementById('dp-month').value).padStart(2,'0');
+    const d = String(document.getElementById('dp-day').value).padStart(2,'0');
+    document.getElementById(datePickerTarget).value = y + '-' + m + '-' + d;
+    updatePreview();
+    closeDatePicker();
+    updateDatePickerBtns();
+  }
+
+  function closeDatePicker() {
+    document.getElementById('date-picker-popup').style.display = 'none';
+  }
+
+  function clearDatePicker() {
+    const si = document.getElementById('since'); if (si) si.value = '';
+    const un = document.getElementById('until'); if (un) un.value = '';
+    updatePreview();
+    updateDatePickerBtns();
+  }
+
+  function updateDatePickerBtns() {
+    const since = document.getElementById('since').value;
+    const until = document.getElementById('until').value;
+    const sb = document.getElementById('dp-since-btn');
+    const ub = document.getElementById('dp-until-btn');
+    if (sb) sb.textContent = since ? '📅 ' + since.replace(/-/g,'/') : '📅 開始日';
+    if (ub) ub.textContent = until ? '📅 ' + until.replace(/-/g,'/') : '📅 終了日';
+  }
+
   // ── 年一覧ピッカー ───────────────────────────────
   let yearPickerTarget = null;
 
@@ -1464,6 +1575,7 @@
       if (midBtn) midBtn.classList.remove('has-query');
     }
     [btn, topBtn, midBtn].forEach(b => { if (b) b.href = searchUrl; });
+    updateDatePickerBtns();
     saveState();
   }
 
@@ -1808,6 +1920,7 @@
     if (fm) fm.value = '1';
     const si = document.getElementById('since'); if (si) si.value = '';
     const un = document.getElementById('until'); if (un) un.value = '';
+    updateDatePickerBtns();
     // ユーザーを探す欄もリセット
     const us = document.getElementById('userSearchInput');
     if (us) { us.value = ''; hideUserSearchHistory(); }
