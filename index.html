@@ -989,7 +989,7 @@
   </div>
 
   <!-- ユーザーIDを探す（X検索連携） -->
-  <div class="section" style="margin-bottom:8px;">
+  <div class="section" style="margin-bottom:8px; overflow:visible;">
     <div class="section-header">
       <div class="section-icon icon-blue" style="font-size:15px;">🔎</div>
       <span class="section-title">ユーザーを探す</span>
@@ -1794,16 +1794,23 @@
 
   function clearAll() {
     TEXT_FIELDS.forEach(id => {
-      document.getElementById(id).value = '';
+      const el = document.getElementById(id);
+      if (el) el.value = '';
     });
     Object.keys(filters).forEach(k => {
       filters[k] = false;
-      document.getElementById('btn-' + k).classList.remove('active');
+      const btn = document.getElementById('btn-' + k);
+      if (btn) btn.classList.remove('active');
     });
-    document.getElementById('firstYear').value = new Date().getFullYear();
-    document.getElementById('firstMonth').value = '1';
-    document.getElementById('since').value = '';
-    document.getElementById('until').value = '';
+    const fy = document.getElementById('firstYear');
+    const fm = document.getElementById('firstMonth');
+    if (fy) fy.value = new Date().getFullYear();
+    if (fm) fm.value = '1';
+    const si = document.getElementById('since'); if (si) si.value = '';
+    const un = document.getElementById('until'); if (un) un.value = '';
+    // ユーザーを探す欄もリセット
+    const us = document.getElementById('userSearchInput');
+    if (us) { us.value = ''; hideUserSearchHistory(); }
     updatePreview();
   }
 
