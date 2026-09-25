@@ -2,7 +2,8 @@ name: Update Stock List
 
 on:
   schedule:
-    - cron: '0 1 * * 1'
+    - cron: '0 1 * * 1'  # 月曜 10:00 JST
+    - cron: '0 1 * * 4'  # 木曜 10:00 JST（IPO反映の待ち時間を短縮するため週2回に）
   workflow_dispatch:
 
 jobs:
